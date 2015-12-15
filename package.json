@@ -1,0 +1,13 @@
+{
+  "name": "toutiao",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start"
+  },
+  "dependencies": {
+    "react-native": "^0.15.0",
+    "react-native-icons": "^0.7.0",
+    "react-native-refreshable-listview": "^1.3.0"
+  }
+}
