@@ -3,6 +3,7 @@
 var React = require('react-native');
 var PRE_LIST_URL = "http://m.yergoo.com/api/news/app/lists/";
 var LISTS_KEY = "toutiao-kailuo99-";
+var STAR_KEY = "toutiao-star-";
 var RefreshableListView = require('react-native-refreshable-listview');
 var Li = require('./Li');
 
@@ -67,13 +68,12 @@ var List = React.createClass({
         var begin_id = this.state.datas.max;
       }
       var url = PRE_LIST_URL + this.props.route.sign + '?beginid=' + begin_id;
-console.log(url);
       fetch(url)
         .then((response) => response.json())
         .then(
           (responseData) => {
             if(responseData.status == 1) {
-
+              console.log(responseData);
                 if(this.state.datas == null) {
                     var tmp = {
                         lists:[responseData.data.lists.lists],
@@ -102,12 +102,41 @@ console.log(url);
          )
         .done();
   },
+
   navHandleChange: function(id) {
-      this.props.navigator.push({
-          name:'详情页',
-          id:id,
-          page:'detail',
-      });
+      AsyncStorage.getItem(STAR_KEY)
+        .then((tmp)=>{
+          console.log(tmp,tmp == "null",tmp === null,typeof(tmp));
+            if(tmp != null) {
+                tmp =  JSON.parse(tmp);
+                console.log(tmp,tmp.length);
+                if(tmp.length > 0) {
+
+                  for(var i=0;i< tmp.length;i++) {
+
+                    if(tmp[i] == id) {
+                        this.props.navigator.push({
+                          name:'详情页',
+                          id:id,
+                          page:'detail',
+                          isStar:true,
+                        });
+                        return;
+                    }
+                  }
+                }
+            }
+
+            this.props.navigator.push({
+                name:'详情页',
+                id:id,
+                page:'detail',
+                isStar:false,
+            });
+
+        })
+        .done();
+      
   },
   _renderList: function(data,sectionID,rowID) {
       return (
@@ -152,34 +181,34 @@ console.log(url);
     }
   },
   render: function() {
-        if(!this.state.loaded) {
-          return (
-                <View style={{flex:1}}>
-                  <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
-                    <ActivityIndicatorIOS color = {'#d43d3d'} />
-                  </View>
+      if(!this.state.loaded) {
+        return (
+              <View style={{flex:1}}>
+                <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
+                  <ActivityIndicatorIOS color = {'#d43d3d'} />
                 </View>
-            );
-        } else {
-          return (
-            <View style={{flex: 1,marginTop:64,}} >
-              <RefreshableListView style={{flex:1,overflow: 'hidden'}}
-                initialListSize={6}
-                pageSize={1}
-                scrollRenderAheadDistance={200}
-                removeClippedSubviews={true}
-                dataSource={ds.cloneWithRowsAndSections(this.state.datas.lists)} // 渲染的数据聚合
-                renderRow={this._renderList}  // 单一条数模板
-                loadData={this._reloadLists}
-                // refreshDescription={"加载中~"}
-                minPulldownDistance={30}   // 最新下拉长度
-                renderHeaderWrapper={this.renderHeaderWrapper}
-                renderFooter={this.renderFooter}
-                onEndReached={this.onEndReached}
-                 />
-            </View>
+              </View>
           );
-        }
+      } else {
+        return (
+          <View style={{flex: 1,marginTop:64,}} >
+            <RefreshableListView style={{flex:1,overflow: 'hidden'}}
+              initialListSize={6}
+              pageSize={1}
+              scrollRenderAheadDistance={200}
+              removeClippedSubviews={true}
+              dataSource={ds.cloneWithRowsAndSections(this.state.datas.lists)} // 渲染的数据聚合
+              renderRow={this._renderList}  // 单一条数模板
+              loadData={this._reloadLists}
+              // refreshDescription={"加载中~"}
+              minPulldownDistance={30}   // 最新下拉长度
+              renderHeaderWrapper={this.renderHeaderWrapper}
+              renderFooter={this.renderFooter}
+              onEndReached={this.onEndReached}
+               />
+          </View>
+        );
+      }
   }
 });
 

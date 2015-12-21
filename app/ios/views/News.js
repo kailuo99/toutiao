@@ -3,15 +3,19 @@
 var React = require('react-native');
 var List = require('./List');
 var Detail = require('./Detail');
-var { Icon, } = require('react-native-icons');
+var Icon = require('react-native-vector-icons/Ionicons');
+
 var {
   AppRegistry,
   StyleSheet,
   Text,
   View,
   Navigator,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } = React;
+
+var STAR_KEY = "toutiao-star-";
 
 var ROUTE_STACK = [
     {
@@ -84,23 +88,77 @@ var Nav = {
           </TouchableOpacity>
         );
     }
+  },
 
+  _changeDetailStar: function(route,navigator) {
+      var tmpRoute = route;
+      var dataArr = null;
+      AsyncStorage.getItem(STAR_KEY)
+        .then((dataStr)=>{
+          console.log(dataStr,'123');
+            if(dataStr != null) {
+                dataArr = JSON.parse(dataStr);
+                 if(route.isStar) {
+                    if(dataArr.length > 0) {
+                        for(var i=0; i< dataArr.length; i++) {
+                            if(dataArr[i] == route.id) {
+                               dataArr.splice(i,1);
+                               tmpRoute.isStar = !tmpRoute.isStar;
+                               navigator.replace(tmpRoute);
+                               break;
+                            }
+                        }
+                    }
+                } else {
+                    dataArr.unshift(route.id);
+                    tmpRoute.isStar = !tmpRoute.isStar;
+                    navigator.replace(tmpRoute);
+                }
+            } else {
+                dataArr = [];
+                if(!route.isStar) {
+                  dataArr.unshift(route.id);
+                  tmpRoute.isStar = !tmpRoute.isStar;
+                  navigator.replace(tmpRoute);
+                }
+            }
+            AsyncStorage.setItem(STAR_KEY, JSON.stringify(dataArr)).done();
+        })
+        .done();
   },
 
   RightButton: function(route, navigator, index, navState) {
-    if(ROUTE_STACK.length == (index+1) || route.page == 'detail') {
+    if(route.page == 'detail') {
+        if(route.isStar) {
         return (
             <TouchableOpacity
-              onPress={() => navigator.jumpForward()}
+             onPress={()=>this._changeDetailStar(route,navigator)}
               style={styles.navBarRightButton}>
               <Icon
-                  name='ion|ios-star'
+                  name='ios-star'
                   size={25}
-                  coloe='black'
+                  color='black'
                   style={{width:25,height:25,marginTop:10,}}
-                />
+              />
             </TouchableOpacity>
         );
+        } else {
+        return (
+            <TouchableOpacity
+             onPress={()=>this._changeDetailStar(route,navigator)}
+              style={styles.navBarRightButton}>
+              <Icon
+                  name='ios-star-outline'
+                  size={25}
+                  color='black'
+                  style={{width:25,height:25,marginTop:10,}}
+              />
+            </TouchableOpacity>
+        );
+        }
+        
+    } else if(ROUTE_STACK.length == (index+1)) {
+        return null;
     } else {
         var nextRoute = ROUTE_STACK[index + 1];
         return (
@@ -130,7 +188,13 @@ var Nav = {
 };
 
 var News = React.createClass({
-
+    getInitialState: function() {
+        return {
+            datas:null,
+            loaded:false,
+            isFetchMaxId:0, //正在拉取的当前的数据的最大ID
+        };
+    },
   _renderScene: function(route,nav) {
       switch(route.page) {
           case 'lists':
@@ -140,18 +204,22 @@ var News = React.createClass({
       }
   },
   _refFunc: function(navigator) {
-    //   var callback = (event) => {
-    //        var route = event.data.route;
-    //        console.log(navigator.getCurrentRoutes(),navigator.getRouteID(),event.type,'lists');
-    //   };
-    //     // Observe focus change events from the owner.
-    //     this._listeners = [
-    //       navigator.navigationContext.addListener('didfocus', callback),
-    //       navigator.navigationContext.addListener('willfocus', callback),
-    //     ];
+      var callback = (event) => {
+           var route = event.data.route;
+           if(route.page == 'detail') {
+              // 这里写逻辑来加载收藏的路由
+              // console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
+           }
+           
+      };
+        // Observe focus change events from the owner.
+        this._listeners = [
+          navigator.navigationContext.addListener('didfocus', callback),
+          // navigator.navigationContext.addListener('willfocus', callback),
+        ];
   } ,
   componentWillUnmount: function() {
-    // this._listeners && this._listeners.forEach(listener => listener.remove());
+      this._listeners && this._listeners.forEach(listener => listener.remove());
   },
   render: function() {
     return (

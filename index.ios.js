@@ -3,13 +3,16 @@
 var React = require('react-native');
 var News = require('./app/ios/views/News');
 var Video = require('./app/ios/views/Video');
+var User = require('./app/ios/views/User');
+var Icon = require('react-native-vector-icons/Ionicons');
 var {
   AppRegistry,
   StyleSheet,
   Text,
   View,
   Navigator,
-  TabBarIOS
+  TabBarIOS,
+  AlertIOS,
 } = React;
 
 var ROUTE_STACK = [
@@ -26,84 +29,50 @@ var ROUTE_STACK = [
         name:'我的'
     }
 ];
-// tab
-class Tab extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tabIndex: props.initTabIndex,
-    };
-};
-
-  render() {
-    return (
-      <View style={styles.tabs}>
-        <TabBarIOS>
-        <TabBarIOS.Item
-          title={ROUTE_STACK[1].name}
-          selected={this.state.tabIndex === 0}
-          onPress={() => {
-            this.props.onChangeTab(0);
-            this.setState({ tabIndex: 0, });
-          }}>
-          <View />
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          title={ROUTE_STACK[1].name}
-          selected={this.state.tabIndex === 1}
-          onPress={() => {
-            this.props.onChangeTab(1);
-            this.setState({ tabIndex: 1, });
-          }}>
-          <View />
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          title={ROUTE_STACK[1].name}
-          selected={this.state.tabIndex === 2}
-          onPress={() => {
-            this.props.onChangeTab(2);
-            this.setState({ tabIndex: 2, });
-          }}>
-          <View />
-        </TabBarIOS.Item>
-        </TabBarIOS>
-      </View>
-    );
-  }
-}
 
 var toutiao = React.createClass({
-
-  _renderScene: function(route,nav) {
-      switch(route.page) {
-          case 'news':
-            return <News navigator={nav} route={route}/>;
-          case 'videos':
-            return <Video navigator={nav} route={route}/>;
+    getInitialState: function() {
+        return {
+            tabIndex:0,
+        };
+    },
+  _renderScene: function() {
+      switch(this.state.tabIndex) {
+          case 0:
+            return <News />;
+          case 1:
+            return <Video />;
+          case 2:
+            return <User />;
       }
   },
+
   render: function() {
     return (
-        <Navigator
-          ref={(navigator)=>{this._navigator = navigator}}
-          style={styles.container} // 整体的背景颜色
-          initialRoute={ROUTE_STACK[0]}
-          initialRouteStack={ROUTE_STACK}
-          renderScene={this._renderScene}
-          sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的背景颜色
-          configureScene={() => ({
-            ...Navigator.SceneConfigs.PushFromRight,
-          })}
-          navigationBar={
-              <Tab
-                initTabIndex={0}
-                routeStack={ROUTE_STACK}
-                onChangeTab={(index) => {
-                  this._navigator.jumpTo(ROUTE_STACK[index]);
-                }}
-              />
-          }
-        />
+        <View style={styles.container}>
+          <TabBarIOS>
+              <Icon.TabBarItem
+                title={ROUTE_STACK[0].name}
+                selected={this.state.tabIndex === 0}
+                iconName="ios-list-outline"
+                selectedIconName="ios-list"
+                onPress={() => {
+                  this.setState({ tabIndex: 0, });
+                }}>
+                {this._renderScene()}
+              </Icon.TabBarItem>
+              <Icon.TabBarItem
+                title={ROUTE_STACK[2].name}
+                selected={this.state.tabIndex === 2}
+                iconName="ios-person-outline"
+                selectedIconName="ios-person"
+                onPress={() => {
+                  this.setState({ tabIndex: 2, });
+                }}>
+                {this._renderScene()}
+              </Icon.TabBarItem>
+          </TabBarIOS>
+        </View>
     );
   }
 });

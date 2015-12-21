@@ -15,18 +15,19 @@ var {
 } = React;
 
 var Detail = React.createClass({
-    componentWillMount: function() {
+    componentDidMount: function() {
         var navigator = this.props.navigator;
         var callback = (event) => {
              var route = event.data.route;
               if(route.page=='lists') {
                  navigator.ResetRouteStack(this.props.route_stact, this.props.route_stact.indexOf(route));
-                //  console.log(navigator.getCurrentRoutes(),event.type);
+                 // console.log(this.props.route_stact.indexOf(route),navigator.getCurrentRoutes(),event.type);
               }
         };
           // Observe focus change events from the owner.
           this._listeners = [
             navigator.navigationContext.addListener('didfocus', callback),
+            // navigator.navigationContext.addListener('willfocus', callback),
           ];
     },
     componentWillUnmount: function() {
@@ -59,6 +60,7 @@ var styles = StyleSheet.create({
     flex:1,
     borderColor:'#e6e6e6',
     borderWidth: 1/PixelRatio.get(),
+    marginBottom:50
   },
 });
 
