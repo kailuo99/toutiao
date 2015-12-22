@@ -50,7 +50,7 @@ var toutiao = React.createClass({
   render: function() {
     return (
         <View style={styles.container}>
-          <TabBarIOS>
+          <TabBarIOS translucent={true}>
               <Icon.TabBarItem
                 title={ROUTE_STACK[0].name}
                 selected={this.state.tabIndex === 0}

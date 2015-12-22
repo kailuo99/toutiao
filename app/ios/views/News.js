@@ -95,7 +95,7 @@ var Nav = {
       var dataArr = null;
       AsyncStorage.getItem(STAR_KEY)
         .then((dataStr)=>{
-          console.log(dataStr,'123');
+        
             if(dataStr != null) {
                 dataArr = JSON.parse(dataStr);
                  if(route.isStar) {
@@ -156,7 +156,7 @@ var Nav = {
             </TouchableOpacity>
         );
         }
-        
+
     } else if(ROUTE_STACK.length == (index+1)) {
         return null;
     } else {
@@ -210,7 +210,7 @@ var News = React.createClass({
               // 这里写逻辑来加载收藏的路由
               // console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
            }
-           
+
       };
         // Observe focus change events from the owner.
         this._listeners = [

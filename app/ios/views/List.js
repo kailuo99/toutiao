@@ -73,7 +73,7 @@ var List = React.createClass({
         .then(
           (responseData) => {
             if(responseData.status == 1) {
-              console.log(responseData);
+
                 if(this.state.datas == null) {
                     var tmp = {
                         lists:[responseData.data.lists.lists],
@@ -106,10 +106,10 @@ var List = React.createClass({
   navHandleChange: function(id) {
       AsyncStorage.getItem(STAR_KEY)
         .then((tmp)=>{
-          console.log(tmp,tmp == "null",tmp === null,typeof(tmp));
+        //   console.log(tmp,tmp == "null",tmp === null,typeof(tmp));
             if(tmp != null) {
                 tmp =  JSON.parse(tmp);
-                console.log(tmp,tmp.length);
+                // console.log(tmp,tmp.length);
                 if(tmp.length > 0) {
 
                   for(var i=0;i< tmp.length;i++) {
@@ -136,7 +136,7 @@ var List = React.createClass({
 
         })
         .done();
-      
+
   },
   _renderList: function(data,sectionID,rowID) {
       return (
