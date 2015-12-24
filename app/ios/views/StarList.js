@@ -56,7 +56,7 @@ var styles = StyleSheet.create({
         marginTop:85
     },
     li: {
-        height: 40,
+        height: 60,
         backgroundColor:'#fff',
         marginBottom: 1,
         justifyContent:'center',

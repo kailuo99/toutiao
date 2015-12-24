@@ -123,9 +123,10 @@ var styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         marginBottom: 40,
+        marginTop:20,
     },
     li: {
-        height: 40,
+        height: 60,
         backgroundColor:'#fff',
         marginBottom: 1,
         justifyContent:'center',
