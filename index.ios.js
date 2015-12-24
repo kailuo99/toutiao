@@ -123,7 +123,7 @@ var toutiao = React.createClass({
                     name='ios-star'
                     size={25}
                     color='black'
-                    style={{width:25,height:25,marginTop:10,marginTop:-5}}
+                    style={{width:25,height:25,marginTop:10}}
                 />
               </TouchableOpacity>
           );
@@ -136,7 +136,7 @@ var toutiao = React.createClass({
                     name='ios-star-outline'
                     size={25}
                     color='black'
-                    style={{width:25,height:25,marginTop:10,marginTop:-5}}
+                    style={{width:25,height:25,marginTop:10}}
                 />
               </TouchableOpacity>
           );
@@ -201,6 +201,9 @@ var styles = StyleSheet.create({
   navBarLeftButton: {
     paddingLeft: 10,
   },
+  navBarRightButton: {
+      marginRight:10,
+  }
 });
 
 AppRegistry.registerComponent('toutiao', () => toutiao);
