@@ -9,36 +9,40 @@ var {
   WebView,
   AlertIOS,
   TouchableOpacity,
-  Image,
   PixelRatio,
   Dimensions
 } = React;
 
 var Detail = React.createClass({
     componentDidMount: function() {
-        var navigator = this.props.navigator;
-        var callback = (event) => {
-             var route = event.data.route;
-              if(route.page=='lists') {
-                 navigator.ResetRouteStack(this.props.route_stact, this.props.route_stact.indexOf(route));
-                 // console.log(this.props.route_stact.indexOf(route),navigator.getCurrentRoutes(),event.type);
-              }
-        };
-          // Observe focus change events from the owner.
-          this._listeners = [
-            navigator.navigationContext.addListener('didfocus', callback),
-            // navigator.navigationContext.addListener('willfocus', callback),
-          ];
+        // if(this.props.from == 'news') {
+        //     var navigator = this.props.navigator;
+        //     var callback = (event) => {
+        //          var route = event.data.route;
+        //           if(route.page=='lists') {
+        //
+        //              // console.log(this.props.route_stact.indexOf(route),navigator.getCurrentRoutes(),event.type);
+        //           }
+        //     };
+        //       // Observe focus change events from the owner.
+        //       this._listeners = [
+        //         // navigator.navigationContext.addListener('didfocus', callback),
+        //         // navigator.navigationContext.addListener('willfocus', callback),
+        //       ];
+        // }
+
     },
     componentWillUnmount: function() {
-      this._listeners && this._listeners.forEach(listener => listener.remove());
+        // if(this.props.from == 'news') {
+        //     this._listeners && this._listeners.forEach(listener => listener.remove());
+        // }
     },
   render: function() {
     return (
         <View style={{flex:1}}>
             <View style={styles.content}>
               <WebView
-              url={"http://m.yergoo.com/api/news/app/" + this.props.navigator.state.routeStack[this.props.navigator.state.routeStack.length-1].id}
+              url={"http://m.yergoo.com/api/news/app/" + this.props.id}
               automaticallyAdjustContentInset={true}
               />
             </View>
@@ -60,7 +64,6 @@ var styles = StyleSheet.create({
     flex:1,
     borderColor:'#e6e6e6',
     borderWidth: 1/PixelRatio.get(),
-    marginBottom:50
   },
 });
 

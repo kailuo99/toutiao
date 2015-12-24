@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		001B2EC81C28E20B00986567 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 001B2EC71C28E20B00986567 /* main.jsbundle */; };
+		0015C3B31C2BE49B00DF23CF /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 0015C3B21C2BE49B00DF23CF /* main.jsbundle */; };
 		0034E35E1C1FD55400354F2E /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 0034E35D1C1FD55400354F2E /* Fonts */; };
 		0034E3651C1FD64200354F2E /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0034E3641C1FD63000354F2E /* libRNVectorIcons.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -115,7 +115,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		001B2EC71C28E20B00986567 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ../main.jsbundle; sourceTree = "<group>"; };
+		0015C3B21C2BE49B00DF23CF /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ../main.jsbundle; sourceTree = "<group>"; };
 		0034E35D1C1FD55400354F2E /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		0034E35F1C1FD63000354F2E /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		00BB2B951C0FD59600A79029 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -309,7 +309,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				001B2EC71C28E20B00986567 /* main.jsbundle */,
+				0015C3B21C2BE49B00DF23CF /* main.jsbundle */,
 				0034E35D1C1FD55400354F2E /* Fonts */,
 				13B07FAE1A68108700A75B9A /* toutiao */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -546,7 +546,7 @@
 				0034E35E1C1FD55400354F2E /* Fonts in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				001B2EC81C28E20B00986567 /* main.jsbundle in Resources */,
+				0015C3B31C2BE49B00DF23CF /* main.jsbundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

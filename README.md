@@ -13,3 +13,33 @@ ios app
 第一步是为了将js bundle包进行压缩。2、3步是为了去掉 shake your phone 模式。
 
 ## onpress 怎么做到多次单击，只有一次有效
+
+
+
+# JS ES6学习
+
+## 类的使用方法
+
+class extends ParentClass {
+    constructor() { // 类似于php __construct()
+
+    }
+
+    say() { // 定义方法
+
+    }
+}
+
+## let var区别
+
+let在 {}之内使用，超出调用返回undefined
+var 在 function() {} 里面使用。
+
+    eg:  function printName() {
+              var name = "Hey";
+              if(true) {
+                let name = "Rafael";
+                console.log(name); // Rafael
+              }
+              console.log(name); // Hey
+          }

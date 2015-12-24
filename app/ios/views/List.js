@@ -3,7 +3,7 @@
 var React = require('react-native');
 var PRE_LIST_URL = "http://m.yergoo.com/api/news/app/lists/";
 var LISTS_KEY = "toutiao-kailuo99-";
-var STAR_KEY = "toutiao-star-";
+
 var RefreshableListView = require('react-native-refreshable-listview');
 var Li = require('./Li');
 
@@ -102,41 +102,27 @@ var List = React.createClass({
          )
         .done();
   },
-
+  // 进入详情页
   navHandleChange: function(id) {
-      AsyncStorage.getItem(STAR_KEY)
-        .then((tmp)=>{
-        //   console.log(tmp,tmp == "null",tmp === null,typeof(tmp));
-            if(tmp != null) {
-                tmp =  JSON.parse(tmp);
-                // console.log(tmp,tmp.length);
-                if(tmp.length > 0) {
 
-                  for(var i=0;i< tmp.length;i++) {
+      if(this.props.starDatas != null) {
+          for(var i = 0; i < this.props.starDatas.length; i++) {
+              if(this.props.starDatas[i] == id) {
+                  this.props.pnav.push({
+                      id:id,
+                      sence:'detail',
+                      isStar: true,
+                  });
+                  return;
+              }
+          }
+      }
 
-                    if(tmp[i] == id) {
-                        this.props.navigator.push({
-                          name:'详情页',
-                          id:id,
-                          page:'detail',
-                          isStar:true,
-                        });
-                        return;
-                    }
-                  }
-                }
-            }
-
-            this.props.navigator.push({
-                name:'详情页',
-                id:id,
-                page:'detail',
-                isStar:false,
-            });
-
-        })
-        .done();
-
+      this.props.pnav.push({
+          id:id,
+          sence:'detail',
+          isStar: false,
+      });
   },
   _renderList: function(data,sectionID,rowID) {
       return (

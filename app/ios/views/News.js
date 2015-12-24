@@ -12,10 +12,11 @@ var {
   View,
   Navigator,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  AlertIOS,
 } = React;
 
-var STAR_KEY = "toutiao-star-";
+
 
 var ROUTE_STACK = [
     {
@@ -63,17 +64,7 @@ var ROUTE_STACK = [
 var Nav = {
 
   LeftButton: function(route, navigator, index, navState) {
-    if(navState.routeStack[index].page == 'detail') {
-        return (
-          <TouchableOpacity
-            onPress={() => navigator.jumpBack()}
-            style={styles.navBarLeftButton}>
-            <Text style={[styles.navBarText, {color:'#666'}]}>
-              返回
-            </Text>
-          </TouchableOpacity>
-        );
-    } else {
+
         if(index == 0) {
             return null;
         }
@@ -87,77 +78,10 @@ var Nav = {
             </Text>
           </TouchableOpacity>
         );
-    }
-  },
-
-  _changeDetailStar: function(route,navigator) {
-      var tmpRoute = route;
-      var dataArr = null;
-      AsyncStorage.getItem(STAR_KEY)
-        .then((dataStr)=>{
-        
-            if(dataStr != null) {
-                dataArr = JSON.parse(dataStr);
-                 if(route.isStar) {
-                    if(dataArr.length > 0) {
-                        for(var i=0; i< dataArr.length; i++) {
-                            if(dataArr[i] == route.id) {
-                               dataArr.splice(i,1);
-                               tmpRoute.isStar = !tmpRoute.isStar;
-                               navigator.replace(tmpRoute);
-                               break;
-                            }
-                        }
-                    }
-                } else {
-                    dataArr.unshift(route.id);
-                    tmpRoute.isStar = !tmpRoute.isStar;
-                    navigator.replace(tmpRoute);
-                }
-            } else {
-                dataArr = [];
-                if(!route.isStar) {
-                  dataArr.unshift(route.id);
-                  tmpRoute.isStar = !tmpRoute.isStar;
-                  navigator.replace(tmpRoute);
-                }
-            }
-            AsyncStorage.setItem(STAR_KEY, JSON.stringify(dataArr)).done();
-        })
-        .done();
   },
 
   RightButton: function(route, navigator, index, navState) {
-    if(route.page == 'detail') {
-        if(route.isStar) {
-        return (
-            <TouchableOpacity
-             onPress={()=>this._changeDetailStar(route,navigator)}
-              style={styles.navBarRightButton}>
-              <Icon
-                  name='ios-star'
-                  size={25}
-                  color='black'
-                  style={{width:25,height:25,marginTop:10,}}
-              />
-            </TouchableOpacity>
-        );
-        } else {
-        return (
-            <TouchableOpacity
-             onPress={()=>this._changeDetailStar(route,navigator)}
-              style={styles.navBarRightButton}>
-              <Icon
-                  name='ios-star-outline'
-                  size={25}
-                  color='black'
-                  style={{width:25,height:25,marginTop:10,}}
-              />
-            </TouchableOpacity>
-        );
-        }
-
-    } else if(ROUTE_STACK.length == (index+1)) {
+    if(ROUTE_STACK.length == (index+1)) {
         return null;
     } else {
         var nextRoute = ROUTE_STACK[index + 1];
@@ -175,15 +99,11 @@ var Nav = {
   },
 
   Title: function(route, navigator, index, navState) {
-    if(route.page == 'detail') {
-        return null;
-    } else {
-        return (
-          <Text style={[styles.navBarText, styles.navBarTitleText]}>
-            {route.name}资讯
-          </Text>
-        );
-    }
+    return (
+      <Text style={[styles.navBarText, styles.navBarTitleText]}>
+        {route.name}资讯
+      </Text>
+    );
   },
 };
 
@@ -198,28 +118,27 @@ var News = React.createClass({
   _renderScene: function(route,nav) {
       switch(route.page) {
           case 'lists':
-            return <List navigator={nav} route={route}/>;
-          case 'detail':
-            return <Detail navigator={nav} route_stact={ROUTE_STACK} />;
+            return <List navigator={nav} route={route} pnav={this.props.pnav} starDatas={this.props.starDatas}/>;
+            break;
       }
   },
   _refFunc: function(navigator) {
-      var callback = (event) => {
-           var route = event.data.route;
-           if(route.page == 'detail') {
-              // 这里写逻辑来加载收藏的路由
-              // console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
-           }
-
-      };
-        // Observe focus change events from the owner.
-        this._listeners = [
-          navigator.navigationContext.addListener('didfocus', callback),
-          // navigator.navigationContext.addListener('willfocus', callback),
-        ];
+    //   var callback = (event) => {
+    //        var route = event.data.route;
+    //        if(route.page == 'detail') {
+    //           // 这里写逻辑来加载收藏的路由
+    //           // console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
+    //        }
+      //
+    //   };
+    //     // Observe focus change events from the owner.
+    //     this._listeners = [
+    //       navigator.navigationContext.addListener('didfocus', callback),
+    //       // navigator.navigationContext.addListener('willfocus', callback),
+    //     ];
   } ,
   componentWillUnmount: function() {
-      this._listeners && this._listeners.forEach(listener => listener.remove());
+    //   this._listeners && this._listeners.forEach(listener => listener.remove());
   },
   render: function() {
     return (
