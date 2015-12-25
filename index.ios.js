@@ -107,7 +107,7 @@ var toutiao = React.createClass({
           <TouchableOpacity
             onPress={() => navigator.pop()}
             style={styles.navBarLeftButton}>
-            <Text style={[styles.navBarText, {color:'#666'}]}>
+            <Text style={[styles.navBarText]}>
               返回
             </Text>
           </TouchableOpacity>
@@ -121,9 +121,9 @@ var toutiao = React.createClass({
                 style={styles.navBarRightButton}>
                 <Icon
                     name='ios-star'
-                    size={25}
+                    size={30}
                     color='black'
-                    style={{width:25,height:25,marginTop:10}}
+                    style={{width:30,height:30,marginTop:8}}
                 />
               </TouchableOpacity>
           );
@@ -134,9 +134,9 @@ var toutiao = React.createClass({
                 style={styles.navBarRightButton}>
                 <Icon
                     name='ios-star-outline'
-                    size={25}
+                    size={30}
                     color='black'
-                    style={{width:25,height:25,marginTop:10}}
+                    style={{width:30,height:30,marginTop:8}}
                 />
               </TouchableOpacity>
           );
@@ -187,13 +187,13 @@ var styles = StyleSheet.create({
       borderWidth:1
   },
   navBarButtonText: {
-      color:'#666',
-      fontSize:16,
+      fontSize:19,
   },
   navBarText: {
     color:'#333',
-    fontSize: 18,
-    marginVertical: 14,
+    fontSize: 19,
+    marginVertical: 13,
+    letterSpacing: 0.8,
   },
   navBarTitleText: {
     fontWeight: '500',
@@ -202,7 +202,7 @@ var styles = StyleSheet.create({
     paddingLeft: 10,
   },
   navBarRightButton: {
-      marginRight:10,
+      marginRight:5,
   }
 });
 

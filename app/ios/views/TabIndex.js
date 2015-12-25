@@ -12,17 +12,6 @@ var {
   View,
 } = React;
 
-var ROUTE_STACK = [
-    {
-        page:'news',
-        name:'资讯'
-    },
-    {
-        page:'user',
-        name:'我的'
-    }
-];
-
 var TabIndex = React.createClass({
     getInitialState: function() {
         return {
@@ -44,9 +33,9 @@ var TabIndex = React.createClass({
     render: function() {
         return (
             <View style={styles.container}>
-              <TabBarIOS translucent={true}>
+              <TabBarIOS translucent={true} >
                   <Icon.TabBarItem
-                    title={ROUTE_STACK[0].name}
+                    title="资讯"
                     selected={this.state.tabIndex === 0}
                     iconName="ios-list-outline"
                     selectedIconName="ios-list"
@@ -56,10 +45,10 @@ var TabIndex = React.createClass({
                     {this._renderScene()}
                   </Icon.TabBarItem>
                   <Icon.TabBarItem
-                    title={ROUTE_STACK[1].name}
+                    title="收藏"
                     selected={this.state.tabIndex === 1}
-                    iconName="ios-person-outline"
-                    selectedIconName="ios-person"
+                    iconName="ios-paper-outline"
+                    selectedIconName="ios-paper"
                     onPress={() => {
                       this.setState({ tabIndex: 1, });
                     }}>

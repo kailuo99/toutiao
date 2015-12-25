@@ -20,19 +20,19 @@ var {
 var Nav = {
 
   LeftButton: function(route, navigator, index, navState) {
-    if(route.idx != 'user') {
-        return (
-          <TouchableOpacity
-            onPress={() => navigator.pop()}
-            >
-            <Text style={[styles.navBarText, styles.navBarButtonText]}>
-              返回
-            </Text>
-          </TouchableOpacity>
-        );
-    } else {
+    // if(route.idx != 'user') {
+    //     return (
+    //       <TouchableOpacity
+    //         onPress={() => navigator.pop()}
+    //         >
+    //         <Text style={[styles.navBarText, styles.navBarButtonText]}>
+    //           返回
+    //         </Text>
+    //       </TouchableOpacity>
+    //     );
+    // } else {
         return null;
-    }
+    // }
   },
 
   RightButton: function(route, navigator, index, navState) {
@@ -98,7 +98,7 @@ var User = React.createClass({
         return (
             <Navigator
               style={{flex:1}} // 整体的背景颜色
-              initialRoute={{idx:'user',name:'个人中心'}}
+              initialRoute={{idx:'starList',name:'我的收藏'}}
               renderScene={this._renderScene}
               sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的北京颜色
               configureScene={() => ({
@@ -132,8 +132,8 @@ var styles = StyleSheet.create({
         justifyContent:'center',
     },
     fonts: {
-        fontSize:18,
-        letterSpacing:0.5,
+        fontSize:19,
+        letterSpacing: 0.5,
         marginLeft:15,
     },
     navBar: {
@@ -141,24 +141,16 @@ var styles = StyleSheet.create({
         borderColor:'#EAEAEA',
         borderWidth:1
     },
-    navBarButtonText: {
-        color:'#666',
-        fontSize:16,
-    },
+
     navBarText: {
       color:'#333',
-      fontSize: 18,
+      fontSize: 19,
       marginVertical: 14,
       marginLeft:10,
     },
     navBarTitleText: {
       fontWeight: '500',
-    },
-    navBarLeftButton: {
-      paddingLeft: 10,
-    },
-    navBarRightButton: {
-      paddingRight: 10,
+      letterSpacing:1,
     },
 
 });

@@ -52,8 +52,7 @@ class StarList extends React.Component {
 var styles = StyleSheet.create({
 
     lists: {
-        marginTop:45,
-        marginTop:85
+        marginTop:55,
     },
     li: {
         height: 60,

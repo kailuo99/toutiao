@@ -71,12 +71,12 @@ var styles = StyleSheet.create({
         marginBottom:1,
   },
   listTitle: {
-      marginTop:-5,
-      lineHeight:21,
+      marginTop:-4,
+      lineHeight:23,
       fontWeight:'400',
       marginBottom:4,
       letterSpacing:0.8,
-      fontSize:18,
+      fontSize:19,
       color:'#333',
   },
   listImg: {
