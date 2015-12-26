@@ -19,10 +19,10 @@ class StarList extends React.Component {
     }
 
     render() {
-        if(this.props.starDatas == null) {
+        if(this.props.starDatas == null || this.props.starDatas.length == 0) {
             return (
                 <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-                  <Text>暂无收藏~</Text>
+                  <Text style={{letterSpacing: 0.8,color:'#666'}}>暂无收藏~</Text>
                 </View>
             );
         } else {
@@ -33,10 +33,10 @@ class StarList extends React.Component {
                             this.props.starDatas.map((data)=>{
                                 return (
                                     <TouchableOpacity onPress={()=>{
-                                        this.props.pnav.push({sence:'detail', id:data, isStar:true});
+                                        this.props.pnav.push({sence:'detail', id:data.id, title:data.title,isStar:true});
                                     }}>
                                         <View style={styles.li}>
-                                            <Text style={styles.fonts}>{data}</Text>
+                                            <Text style={styles.fonts}>{data.title}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 );
@@ -52,10 +52,10 @@ class StarList extends React.Component {
 var styles = StyleSheet.create({
 
     lists: {
-        marginTop:55,
+        marginTop:60,
     },
     li: {
-        height: 60,
+        height: 75,
         backgroundColor:'#fff',
         marginBottom: 1,
         justifyContent:'center',
@@ -63,7 +63,8 @@ var styles = StyleSheet.create({
     fonts: {
         fontSize:18,
         letterSpacing:0.5,
-        marginLeft:15,
+        marginLeft: 15,
+        lineHeight: 25,
     },
 
 });

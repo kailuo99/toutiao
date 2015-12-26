@@ -107,9 +107,12 @@ var toutiao = React.createClass({
           <TouchableOpacity
             onPress={() => navigator.pop()}
             style={styles.navBarLeftButton}>
-            <Text style={[styles.navBarText]}>
-              返回
-            </Text>
+            <Icon
+                name='ios-arrow-left'
+                size={30}
+                color='#666'
+                style={styles.icon}
+            />
           </TouchableOpacity>
         );
     },
@@ -122,8 +125,8 @@ var toutiao = React.createClass({
                 <Icon
                     name='ios-star'
                     size={30}
-                    color='black'
-                    style={{width:30,height:30,marginTop:8}}
+                    color='#333'
+                    style={styles.icon}
                 />
               </TouchableOpacity>
           );
@@ -135,8 +138,8 @@ var toutiao = React.createClass({
                 <Icon
                     name='ios-star-outline'
                     size={30}
-                    color='black'
-                    style={{width:30,height:30,marginTop:8}}
+                    color='#333'
+                    style={styles.icon}
                 />
               </TouchableOpacity>
           );
@@ -149,7 +152,7 @@ var toutiao = React.createClass({
              if(route.isStar) {
                 if(dataArr.length > 0) {
                     for(var i=0; i< dataArr.length; i++) {
-                        if(dataArr[i] == route.id) {
+                        if(dataArr[i].id == route.id) {
                            dataArr.splice(i,1);
                            tmpRoute.isStar = !tmpRoute.isStar;
                            navigator.replace(tmpRoute);
@@ -158,14 +161,14 @@ var toutiao = React.createClass({
                     }
                 }
             } else {
-                dataArr.unshift(route.id);
+                dataArr.unshift({id: route.id, title: route.title});
                 tmpRoute.isStar = !tmpRoute.isStar;
                 navigator.replace(tmpRoute);
             }
         } else {
             dataArr = [];
             if(!route.isStar) {
-              dataArr.unshift(route.id);
+              dataArr.unshift({id: route.id, title: route.title});
               tmpRoute.isStar = !tmpRoute.isStar;
               navigator.replace(tmpRoute);
             }
@@ -183,26 +186,23 @@ var toutiao = React.createClass({
 var styles = StyleSheet.create({
   navBar: {
       backgroundColor:'#fff',
-      borderColor:'#EAEAEA',
+      borderColor:'#dddddd',
       borderWidth:1
-  },
-  navBarButtonText: {
-      fontSize:19,
-  },
-  navBarText: {
-    color:'#333',
-    fontSize: 19,
-    marginVertical: 13,
-    letterSpacing: 0.8,
   },
   navBarTitleText: {
     fontWeight: '500',
   },
   navBarLeftButton: {
-    paddingLeft: 10,
+    paddingLeft: 5,
   },
   navBarRightButton: {
       marginRight:5,
+  },
+  icon: {
+      width:30,
+      height:30,
+      marginTop:6,
+      textAlign:'center'
   }
 });
 

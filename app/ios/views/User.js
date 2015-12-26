@@ -52,35 +52,35 @@ var User = React.createClass({
 
     _renderScene: function(route,nav) {
         switch (route.idx) {
-            case 'user':
-                return (
-                    <ScrollView style={styles.lists}>
-                        <View style={styles.banner}><Text>手机登录|微信登录|QQ登录</Text></View>
-                        <TouchableOpacity onPress={()=>{nav.push({idx:'starList',name:'我的收藏'})}}>
-                            <View style={styles.li}>
-                                <Text style={styles.fonts}>我的收藏</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>{nav.push({idx:'aboutMe',name:'关于我们'})}}>
-                            <View style={styles.li}>
-                                <Text style={styles.fonts}>关于我们</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </ScrollView>
-                );
-                break;
+            // case 'user':
+            //     return (
+            //         <ScrollView style={styles.lists}>
+            //             <View style={styles.banner}><Text>手机登录|微信登录|QQ登录</Text></View>
+            //             <TouchableOpacity onPress={()=>{nav.push({idx:'starList',name:'我的收藏'})}}>
+            //                 <View style={styles.li}>
+            //                     <Text style={styles.fonts}>我的收藏</Text>
+            //                 </View>
+            //             </TouchableOpacity>
+            //             <TouchableOpacity onPress={()=>{nav.push({idx:'aboutMe',name:'关于我们'})}}>
+            //                 <View style={styles.li}>
+            //                     <Text style={styles.fonts}>关于我们</Text>
+            //                 </View>
+            //             </TouchableOpacity>
+            //         </ScrollView>
+            //     );
+            //     break;
             case 'starList':
                 return (
                     <StarList navigator={nav} pnav={this.props.pnav} starDatas={this.props.starDatas}/>
                 );
                 break;
-            case 'aboutMe':
-                return (
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-                        <Text>我就是kailuo99，酷炫狂炸碉堡天~~~</Text>
-                    </View>
-                );
-                break;
+            // case 'aboutMe':
+            //     return (
+            //         <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+            //             <Text>我就是kailuo99，酷炫狂炸碉堡天~~~</Text>
+            //         </View>
+            //     );
+            //     break;
             default:
         }
 
@@ -97,7 +97,7 @@ var User = React.createClass({
     render: function() {
         return (
             <Navigator
-              style={{flex:1}} // 整体的背景颜色
+              style={{flex:1}} 
               initialRoute={{idx:'starList',name:'我的收藏'}}
               renderScene={this._renderScene}
               sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的北京颜色
@@ -132,25 +132,24 @@ var styles = StyleSheet.create({
         justifyContent:'center',
     },
     fonts: {
-        fontSize:19,
+        fontSize:0.8,
         letterSpacing: 0.5,
         marginLeft:15,
     },
     navBar: {
         backgroundColor:'#fff',
-        borderColor:'#EAEAEA',
+        borderColor:'#dddddd',
         borderWidth:1
     },
 
     navBarText: {
       color:'#333',
-      fontSize: 19,
-      marginVertical: 14,
-      marginLeft:10,
+      fontSize: 20,
+      marginVertical: 12,
     },
     navBarTitleText: {
       fontWeight: '500',
-      letterSpacing:1,
+      letterSpacing:0.8,
     },
 
 });

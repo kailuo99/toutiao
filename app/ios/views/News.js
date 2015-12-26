@@ -169,21 +169,22 @@ var styles = StyleSheet.create({
   },
   navBar: {
       backgroundColor:'#fff',
-      borderColor:'#EAEAEA',
+      borderColor:'#dddddd',
       borderWidth:1
   },
   navBarButtonText: {
       color:'#666',
       fontSize:18,
+      letterSpacing: 1,
   },
   navBarText: {
     color:'#333',
-    fontSize: 19,
-    marginVertical: 13,
+    fontSize: 20,
+    marginVertical: 12,
   },
   navBarTitleText: {
     fontWeight: '500',
-    letterSpacing:1,
+    letterSpacing: 0.8,
   },
   navBarLeftButton: {
     paddingLeft: 10,

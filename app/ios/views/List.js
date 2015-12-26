@@ -103,15 +103,15 @@ var List = React.createClass({
         .done();
   },
   // 进入详情页
-  navHandleChange: function(id) {
-
+  navHandleChange: function(data) {
       if(this.props.starDatas != null) {
           for(var i = 0; i < this.props.starDatas.length; i++) {
-              if(this.props.starDatas[i] == id) {
+              if(this.props.starDatas[i].id == data.id) {
                   this.props.pnav.push({
-                      id:id,
+                      id: data.id,
                       sence:'detail',
                       isStar: true,
+                      title: data.title,
                   });
                   return;
               }
@@ -119,14 +119,15 @@ var List = React.createClass({
       }
 
       this.props.pnav.push({
-          id:id,
+          id:data.id,
           sence:'detail',
           isStar: false,
+          title: data.title,
       });
   },
   _renderList: function(data,sectionID,rowID) {
       return (
-        <TouchableOpacity activeOpacity={0.5} key={data.resource.id} onPress={()=>this.navHandleChange(data.resource.id)}>
+        <TouchableOpacity activeOpacity={0.5} key={data.resource.id} onPress={()=>this.navHandleChange(data.resource)}>
           <Li data={data.resource} key={data.resource.id} />
         </TouchableOpacity>
       );
