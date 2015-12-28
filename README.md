@@ -8,6 +8,11 @@
 3. 上拉加载更多
 4. 收藏功能
 
+# 使用的组件
+
+1. 图标： oblador/react-native-vector-icons
+2. 路由导航： navigator
+
 # 使用方式
 
     需要对react-native有所了解，不会配置环境请查看官方文档。
