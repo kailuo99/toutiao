@@ -36,3 +36,9 @@ Note:
 4. XCODe下执行：菜单->product->scheme->edit scheme->run->build config 设置为 release，debug executable 去掉。
 
 第一步是为了将js bundle包进行压缩。2、3步是为了去掉 shake your phone 模式。
+
+# 截图
+![列表页](http://7xpkii.com1.z0.glb.clouddn.com/demo1.png)
+![详情页](http://7xpkii.com1.z0.glb.clouddn.com/demo2.png)
+![收藏列表](http://7xpkii.com1.z0.glb.clouddn.com/demo3.png)
+![列表页](http://7xpkii.com1.z0.glb.clouddn.com/demo4.png)
