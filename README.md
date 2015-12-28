@@ -11,7 +11,7 @@
 # 使用的组件
 
 1. 图标： oblador/react-native-vector-icons
-2. 路由导航： navigator
+2. 下拉刷新：jsdf/react-native-refreshable-listview
 
 # 使用方式
 
