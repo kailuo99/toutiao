@@ -1,6 +1,13 @@
 # react-native-toutiao
 一款使用react native 开发的ios版的资讯头条APP。
 
+# 实现的功能有：
+
+1. 手势支持的切换界面
+2. 下拉刷新
+3. 上拉加载更多
+4. 收藏功能
+
 # 使用方式
 
     需要对react-native有所了解，不会配置环境请查看官方文档。
