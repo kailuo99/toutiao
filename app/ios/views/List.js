@@ -56,18 +56,20 @@ var List = React.createClass({
             datas: tmp,
             loaded: true,
           });
+          this.getData('top');
       } else {
           this.getData('init');
       }
   },
   // 获取数据
-  getData: function(pos) {
+  async getData(pos) {
       if(!this.state.datas) {
         var begin_id = 0;
       } else {
         var begin_id = this.state.datas.max;
       }
       var url = PRE_LIST_URL + this.props.route.sign + '?beginid=' + begin_id;
+      console.log(url);
       fetch(url)
         .then((response) => response.json())
         .then(

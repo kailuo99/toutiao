@@ -1,14 +1,14 @@
 'use strict';
 
 var React = require('react-native');
-var TabIndex = require('./app/ios/views/TabIndex');
-var Detail = require('./app/ios/views/Detail');
+var TabIndex = require('./app/ios/views/TabIndex'); // tab页
+var Detail = require('./app/ios/views/Detail'); // 详情页
 var Icon = require('react-native-vector-icons/Ionicons');
+var Statistic = require('./app/ios/modules/Statistic');
 var {
   AppRegistry,
   StyleSheet,
   Navigator,
-  AlertIOS,
   AsyncStorage,
   TouchableOpacity,
   Text
@@ -26,7 +26,8 @@ var toutiao = React.createClass({
     },
     componentDidMount: function() {
         // 异步获取
-        this._getstars().done();
+        this._initGetData();
+        Statistic.Run();
     },
     _renderScene: function(route,nav) {
         switch (route.sence) {
@@ -39,26 +40,13 @@ var toutiao = React.createClass({
             default:
         }
     },
-    // 获取收藏数据
-    async _getstars() {
+    // 初始化执行
+    async _initGetData() {
+        // 获取收藏数据
         var tmps = await AsyncStorage.getItem(STAR_KEY);
         this.setState({
             starDatas: tmps != null? JSON.parse(tmps): null,
         });
-    },
-    _navBar: function() {
-        if(!this.state.hideNavBar) {
-            return <Navigator.NavigationBar
-              routeMapper={{
-                  LeftButton: this.LeftButton,
-                  RightButton: this.RightButton,
-                  Title: this.Title
-              }}
-              style={styles.navBar}
-            />;
-        } else {
-            return null;
-        }
     },
 
     _refFunc: function(navigator) {
@@ -92,14 +80,25 @@ var toutiao = React.createClass({
               initialRoute={{sence:'tab'}}
               renderScene={this._renderScene}
               sceneStyle={{backgroundColor:'#fff'}} // 场景的北京颜色
-            //   configureScene={() => ({
-            //     ...Navigator.SceneConfigs.FloatFromRight,
-            //   })}
               navigationBar={
                   this._navBar()
               }
-            />
-        );
+            />);
+    },
+    //
+    _navBar: function() {
+        if(!this.state.hideNavBar) {
+            return <Navigator.NavigationBar
+                      routeMapper={{
+                          LeftButton: this.LeftButton,
+                          RightButton: this.RightButton,
+                          Title: this.Title
+                      }}
+                      style={styles.navBar}
+                    />;
+        } else {
+            return null;
+        }
     },
     // Nav使用
     LeftButton: function(route, navigator, index, navState) {
