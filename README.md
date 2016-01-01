@@ -12,6 +12,7 @@
 
 1. 图标： oblador/react-native-vector-icons
 2. 下拉刷新：jsdf/react-native-refreshable-listview
+3. 获取设备信息：rebeccahughes/react-native-device-info
 
 # 使用方式
 
