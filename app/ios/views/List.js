@@ -38,6 +38,7 @@ var List = React.createClass({
           this._loadinitData();
       }
   },
+
   // 异步加载数据
   async _loadinitData() {
       var tmp = await AsyncStorage.getItem(LISTS_KEY + this.props.route.sign);
@@ -56,9 +57,11 @@ var List = React.createClass({
             datas: tmp,
             loaded: true,
           });
-          this.getData('top');
+          if(this.props.route.sign == 'index') {
+            await this.getData('top');
+          }
       } else {
-          this.getData('init');
+          await this.getData('init');
       }
   },
   // 获取数据

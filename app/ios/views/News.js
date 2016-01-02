@@ -122,24 +122,24 @@ var News = React.createClass({
             break;
       }
   },
-  _refFunc: function(navigator) {
-    //   var callback = (event) => {
-    //        var route = event.data.route;
-    //        if(route.page == 'detail') {
-    //           // 这里写逻辑来加载收藏的路由
-    //           // console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
-    //        }
-      //
-    //   };
-    //     // Observe focus change events from the owner.
-    //     this._listeners = [
-    //       navigator.navigationContext.addListener('didfocus', callback),
-    //       // navigator.navigationContext.addListener('willfocus', callback),
-    //     ];
-  } ,
-  componentWillUnmount: function() {
-    //   this._listeners && this._listeners.forEach(listener => listener.remove());
-  },
+  // _refFunc: function(navigator) {
+  //     var callback = (event) => {
+  //          var route = event.data.route;
+  //          // if(route.page == 'detail') {
+  //             // 这里写逻辑来加载收藏的路由
+  //             console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
+  //          // }
+      
+  //     };
+  //       // Observe focus change events from the owner.
+  //       this._listeners = [
+  //         navigator.navigationContext.addListener('didfocus', callback),
+  //         navigator.navigationContext.addListener('willfocus', callback),
+  //       ];
+  // } ,
+  // componentWillUnmount: function() {
+  //   //   this._listeners && this._listeners.forEach(listener => listener.remove());
+  // },
   render: function() {
     return (
         <Navigator
