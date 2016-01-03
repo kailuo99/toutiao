@@ -12,6 +12,22 @@ var {
   View,
 } = React;
 
+var TabArr = [
+    {
+        key: 0,
+        title: '资讯',
+        icon: 'ios-list-outline',
+        selectedIcon:'ios-list',
+    },
+    {
+        key: 1,
+        title: '收藏',
+        icon: 'ios-paper-outline',
+        selectedIcon:'ios-paper',
+    },
+];
+
+
 var TabIndex = React.createClass({
     getInitialState: function() {
         return {
@@ -19,7 +35,7 @@ var TabIndex = React.createClass({
         };
     },
 
-    _renderScene: function(pnav) {
+    _renderScene: function() {
         switch(this.state.tabIndex) {
             case 0:
                 return <News pnav={this.props.pnav} starDatas={this.props.starDatas} />;
@@ -33,28 +49,26 @@ var TabIndex = React.createClass({
     render: function() {
         return (
             <View style={styles.container}>
-              <TabBarIOS translucent={true} >
-                  <Icon.TabBarItem
-                    title="资讯"
-                    selected={this.state.tabIndex === 0}
-                    iconName="ios-list-outline"
-                    selectedIconName="ios-list"
-                    onPress={() => {
-                      this.setState({ tabIndex: 0, });
-                    }}>
-                    {this._renderScene()}
-                  </Icon.TabBarItem>
-                  <Icon.TabBarItem
-                    title="收藏"
-                    selected={this.state.tabIndex === 1}
-                    iconName="ios-paper-outline"
-                    selectedIconName="ios-paper"
-                    onPress={() => {
-                      this.setState({ tabIndex: 1, });
-                    }}>
-                    {this._renderScene()}
-                  </Icon.TabBarItem>
-              </TabBarIOS>
+                <TabBarIOS translucent={true} >
+                    {
+                        TabArr.map(
+                            (val)=>{
+                                return (
+                                    <Icon.TabBarItem
+                                      title={val.title}
+                                      selected={this.state.tabIndex === val.key}
+                                      iconName={val.icon}
+                                      selectedIconName={val.selectedIcon}
+                                      onPress={() => {
+                                        this.setState({ tabIndex: val.key,});
+                                      }}>
+                                      {this._renderScene()}
+                                    </Icon.TabBarItem>
+                                );
+                            }
+                        )
+                    }
+                </TabBarIOS>
             </View>
         );
     }
@@ -64,10 +78,6 @@ var styles = StyleSheet.create({
     container: {
       flex: 1,
     },
-    tabs: {
-      height: 50,
-    }
-
 });
 
 module.exports = TabIndex;
