@@ -108,20 +108,7 @@ var Nav = {
 };
 
 var News = React.createClass({
-    getInitialState: function() {
-        return {
-            datas:null,
-            loaded:false,
-            isFetchMaxId:0, //正在拉取的当前的数据的最大ID
-        };
-    },
-  _renderScene: function(route,nav) {
-      switch(route.page) {
-          case 'lists':
-            return <List navigator={nav} route={route} pnav={this.props.pnav} starDatas={this.props.starDatas}/>;
-            break;
-      }
-  },
+
   // _refFunc: function(navigator) {
   //     var callback = (event) => {
   //          var route = event.data.route;
@@ -129,7 +116,7 @@ var News = React.createClass({
   //             // 这里写逻辑来加载收藏的路由
   //             console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
   //          // }
-      
+
   //     };
   //       // Observe focus change events from the owner.
   //       this._listeners = [
@@ -147,7 +134,11 @@ var News = React.createClass({
           style={styles.container} // 整体的背景颜色
           initialRoute={ROUTE_STACK[0]}
           initialRouteStack={ROUTE_STACK}
-          renderScene={this._renderScene}
+          renderScene={
+              (route,nav)=>{
+                  return <List navigator={nav} route={route} pnav={this.props.pnav} starDatas={this.props.starDatas}/>;
+              }
+          }
           sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的北京颜色
           configureScene={() => ({
             ...Navigator.SceneConfigs.HorizontalSwipeJump,

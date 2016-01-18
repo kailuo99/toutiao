@@ -13,17 +13,17 @@ import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.os.Handler;
+import android.os.Looper;
 
 import com.facebook.infer.annotation.Assertions;
 
 /**
  * Executes JS remotely via the react nodejs server as a proxy to a browser on the host machine.
  */
-public class WebsocketJavaScriptExecutor implements ProxyJavaScriptExecutor.JavaJSExecutor {
+public class WebsocketJavaScriptExecutor implements JavaJSExecutor {
 
   private static final long CONNECT_TIMEOUT_MS = 5000;
   private static final int CONNECT_RETRY_COUNT = 3;
@@ -97,9 +97,13 @@ public class WebsocketJavaScriptExecutor implements ProxyJavaScriptExecutor.Java
       String webSocketServerUrl,
       final JSExecutorConnectCallback callback) {
     final JSDebuggerWebSocketClient client = new JSDebuggerWebSocketClient();
-    final Handler timeoutHandler = new Handler();
+    final Handler timeoutHandler = new Handler(Looper.getMainLooper());
     client.connect(
         webSocketServerUrl, new JSDebuggerWebSocketClient.JSDebuggerCallback() {
+          // It's possible that both callbacks can fire on an error so make sure we only
+          // dispatch results once to our callback.
+          private boolean didSendResult = false;
+
           @Override
           public void onSuccess(@Nullable String response) {
             client.prepareJSRuntime(
@@ -108,20 +112,30 @@ public class WebsocketJavaScriptExecutor implements ProxyJavaScriptExecutor.Java
                   public void onSuccess(@Nullable String response) {
                     timeoutHandler.removeCallbacksAndMessages(null);
                     mWebSocketClient = client;
-                    callback.onSuccess();
+                    if (!didSendResult) {
+                      callback.onSuccess();
+                      didSendResult = true;
+                    }
                   }
 
                   @Override
                   public void onFailure(Throwable cause) {
                     timeoutHandler.removeCallbacksAndMessages(null);
-                    callback.onFailure(cause);
+                    if (!didSendResult) {
+                      callback.onFailure(cause);
+                      didSendResult = true;
+                    }
                   }
                 });
           }
 
           @Override
           public void onFailure(Throwable cause) {
-            callback.onFailure(cause);
+            timeoutHandler.removeCallbacksAndMessages(null);
+            if (!didSendResult) {
+              callback.onFailure(cause);
+              didSendResult = true;
+            }
           }
         });
     timeoutHandler.postDelayed(
@@ -146,7 +160,7 @@ public class WebsocketJavaScriptExecutor implements ProxyJavaScriptExecutor.Java
 
   @Override
   public void executeApplicationScript(String script, String sourceURL)
-      throws ProxyJavaScriptExecutor.ProxyExecutorException {
+      throws ProxyExecutorException {
     JSExecutorCallbackFuture callback = new JSExecutorCallbackFuture();
     Assertions.assertNotNull(mWebSocketClient).executeApplicationScript(
         sourceURL,
@@ -155,23 +169,22 @@ public class WebsocketJavaScriptExecutor implements ProxyJavaScriptExecutor.Java
     try {
       callback.get();
     } catch (Throwable cause) {
-      throw new ProxyJavaScriptExecutor.ProxyExecutorException(cause);
+      throw new ProxyExecutorException(cause);
     }
   }
 
   @Override
-  public @Nullable String executeJSCall(String moduleName, String methodName, String jsonArgsArray)
-      throws ProxyJavaScriptExecutor.ProxyExecutorException {
+  public @Nullable String executeJSCall(String methodName, String jsonArgsArray)
+      throws ProxyExecutorException {
     JSExecutorCallbackFuture callback = new JSExecutorCallbackFuture();
     Assertions.assertNotNull(mWebSocketClient).executeJSCall(
-        moduleName,
         methodName,
         jsonArgsArray,
         callback);
     try {
       return callback.get();
     } catch (Throwable cause) {
-      throw new ProxyJavaScriptExecutor.ProxyExecutorException(cause);
+      throw new ProxyExecutorException(cause);
     }
   }
 

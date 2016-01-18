@@ -1,15 +1,9 @@
 'use strict';
 
 var iconvLite = require('iconv-lite');
-var Iconv;
-
-try {
-    // this is to fool browserify so it doesn't try (in vain) to install iconv.
-    var iconv_package = 'iconv';
-    Iconv = require(iconv_package).Iconv;
-} catch (E) {
-    // node-iconv not present
-}
+// Load Iconv from an external file to be able to disable Iconv for webpack
+// Add /\/iconv-loader$/ to webpack.IgnorePlugin to ignore it
+var Iconv = require('./iconv-loader');
 
 // Expose to the world
 module.exports.convert = convert;
@@ -30,7 +24,7 @@ function convert(str, to, from, useLite) {
 
     var result;
 
-    if (from != 'UTF-8' && typeof str == 'string') {
+    if (from !== 'UTF-8' && typeof str === 'string') {
         str = new Buffer(str, 'binary');
     }
 
@@ -40,20 +34,11 @@ function convert(str, to, from, useLite) {
         } else {
             result = str;
         }
-    } else {
-        if (Iconv && !useLite) {
-            try {
-                result = convertIconv(str, to, from);
-            } catch (E) {
-                console.error(E);
-                try {
-                    result = convertIconvLite(str, to, from);
-                } catch (E) {
-                    console.error(E);
-                    result = str;
-                }
-            }
-        } else {
+    } else if (Iconv && !useLite) {
+        try {
+            result = convertIconv(str, to, from);
+        } catch (E) {
+            console.error(E);
             try {
                 result = convertIconvLite(str, to, from);
             } catch (E) {
@@ -61,9 +46,17 @@ function convert(str, to, from, useLite) {
                 result = str;
             }
         }
+    } else {
+        try {
+            result = convertIconvLite(str, to, from);
+        } catch (E) {
+            console.error(E);
+            result = str;
+        }
     }
 
-    if (typeof result == 'string') {
+
+    if (typeof result === 'string') {
         result = new Buffer(result, 'utf-8');
     }
 
@@ -94,9 +87,9 @@ function convertIconv(str, to, from) {
  * @return {Buffer} Encoded string
  */
 function convertIconvLite(str, to, from) {
-    if (to == 'UTF-8') {
+    if (to === 'UTF-8') {
         return iconvLite.decode(str, from);
-    } else if (from == 'UTF-8') {
+    } else if (from === 'UTF-8') {
         return iconvLite.encode(str, to);
     } else {
         return iconvLite.encode(iconvLite.decode(str, from), to);

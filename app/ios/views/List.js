@@ -17,7 +17,9 @@ var {
   ListView,
   AsyncStorage,
   Navigator,
-  AlertIOS
+  AlertIOS,
+  Alert,
+  AppStateIOS
 } = React;
 var ds = new ListView.DataSource({
     rowHasChanged: (r1, r2) => r1 !== r2,
@@ -28,6 +30,7 @@ var List = React.createClass({
 
   getInitialState: function() {
       return {
+          sign: null,
           datas:null,
           loaded:false,
           isFetchMaxId:0, //正在拉取的当前的数据的最大ID
@@ -36,6 +39,17 @@ var List = React.createClass({
   componentDidMount: function() {
       if(this.state.datas == null) {
           this._loadinitData();
+      }
+      AppStateIOS.addEventListener('change', this._handleAppStateChange);
+  },
+  componentWillUnmount: function() {
+    AppStateIOS.removeEventListener('change');
+  },
+  _handleAppStateChange(currentAppState) {
+      if(currentAppState == 'active') {
+
+      } else if (currentAppState == 'background') {
+
       }
   },
 
@@ -184,7 +198,7 @@ var List = React.createClass({
       } else {
         return (
           <View style={{flex: 1,marginTop:64,}} >
-            <RefreshableListView style={{flex:1,overflow: 'hidden'}}
+            <RefreshableListView style={{flex:1,overflow: 'hidden',marginBottom:50}}
               initialListSize={6}
               pageSize={1}
               scrollRenderAheadDistance={200}
@@ -192,7 +206,6 @@ var List = React.createClass({
               dataSource={ds.cloneWithRowsAndSections(this.state.datas.lists)} // 渲染的数据聚合
               renderRow={this._renderList}  // 单一条数模板
               loadData={this._reloadLists}
-              // refreshDescription={"加载中~"}
               minPulldownDistance={30}   // 最新下拉长度
               renderHeaderWrapper={this.renderHeaderWrapper}
               renderFooter={this.renderFooter}

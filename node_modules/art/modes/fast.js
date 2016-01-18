@@ -1,13 +1,7 @@
 var VML = require('./vml');
 var Canvas = require('./canvas');
+var Base = require('./canvas/base');
 //var Flash = require('./flash');
-
-var hasCanvas = function(){
-
-	var canvas = document.createElement('canvas');
-	return canvas && !!canvas.getContext;
-
-};
 
 /*
 var hasFlash = function(){
@@ -23,7 +17,7 @@ var hasFlash = function(){
 };
 */
 
-var MODE = hasCanvas() ? Canvas : /*hasFlash() ? Flash :*/ VML;
+var MODE = Base._genericContext ? Canvas : /*hasFlash() ? Flash :*/ VML;
 
 exports.Surface = MODE.Surface;
 exports.Path = MODE.Path;

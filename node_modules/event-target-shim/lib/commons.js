@@ -28,6 +28,30 @@ var createUniqueKey = exports.createUniqueKey = (typeof Symbol !== "undefined" ?
 exports.LISTENERS = createUniqueKey("listeners");
 
 /**
+ * A value of kind for listeners which are registered in the capturing phase.
+ *
+ * @type {number}
+ * @private
+ */
+exports.CAPTURE = 1;
+
+/**
+ * A value of kind for listeners which are registered in the bubbling phase.
+ *
+ * @type {number}
+ * @private
+ */
+exports.BUBBLE = 2;
+
+/**
+ * A value of kind for listeners which are registered as an attribute.
+ *
+ * @type {number}
+ * @private
+ */
+exports.ATTRIBUTE = 3;
+
+/**
  * @typedef object ListenerNode
  * @property {function} listener - A listener function.
  * @property {number} kind - The kind of the listener.

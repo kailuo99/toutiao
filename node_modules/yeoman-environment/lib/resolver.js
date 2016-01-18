@@ -3,7 +3,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('lodash');
 var globby = require('globby');
-var debug = require('debug')('generators:environment');
+var debug = require('debug')('yeoman:environment');
 
 var win32 = process.platform === 'win32';
 

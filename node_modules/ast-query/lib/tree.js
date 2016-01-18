@@ -9,7 +9,7 @@ var CallExpression = require('./nodes/CallExpression');
 var AssignmentExpression = require('./nodes/AssignmentExpression');
 var Body = require('./nodes/Body');
 
-var esprimaOptions = {
+var esprimaOptionDefaults = {
   comment: true,
   range: true,
   loc: false,
@@ -17,7 +17,7 @@ var esprimaOptions = {
   raw: false
 };
 
-var escodegenOptions = {
+var escodegenOptionDefaults = {
   comment: true,
   format: {
     indent: {
@@ -26,11 +26,12 @@ var escodegenOptions = {
   }
 };
 
-function Tree(source, options) {
-  this.tree = esprima.parse(source.toString(), esprimaOptions);
+function Tree(source, escodegenOptions, esprimaOptions) {
+  this.esprimaOptionDefaults = _.merge({}, esprimaOptionDefaults, esprimaOptions);
+  this.tree = esprima.parse(source.toString(), this.esprimaOptionDefaults);
   this.tree = escodegen.attachComments(this.tree, this.tree.comments, this.tree.tokens);
   this.body = new Body(this.tree.body);
-  this.escodegenOptions = _.merge({}, escodegenOptions, options);
+  this.escodegenOptions = _.merge({}, escodegenOptionDefaults, escodegenOptions);
 }
 
 /**
@@ -97,6 +98,6 @@ Tree.prototype.assignment = function (assignedTo) {
   return new AssignmentExpression(nodes);
 };
 
-module.exports = function (source, options) {
-  return new Tree(source, options);
+module.exports = function (source, escodegenOptions, esprimaOptions) {
+  return new Tree(source, escodegenOptions, esprimaOptions);
 };

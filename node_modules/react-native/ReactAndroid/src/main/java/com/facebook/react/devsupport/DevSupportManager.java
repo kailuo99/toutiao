@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -35,14 +38,15 @@ import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.R;
 import com.facebook.react.bridge.CatalystInstance;
+import com.facebook.react.bridge.JavaJSExecutor;
 import com.facebook.react.bridge.NativeModuleCallExceptionHandler;
-import com.facebook.react.bridge.ProxyJavaScriptExecutor;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WebsocketJavaScriptExecutor;
 import com.facebook.react.common.ReactConstants;
 import com.facebook.react.common.ShakeDetector;
+import com.facebook.react.common.futures.SimpleSettableFuture;
 import com.facebook.react.devsupport.StackTraceHelper.StackFrame;
 import com.facebook.react.modules.debug.DeveloperSettings;
 
@@ -155,7 +159,7 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
   public void handleException(Exception e) {
     if (mIsDevSupportEnabled) {
       FLog.e(ReactConstants.TAG, "Exception in native call from JS", e);
-      showNewError(e.getMessage(), StackTraceHelper.convertJavaStackTrace(e), JAVA_ERROR_COOKIE);
+      showNewJavaError(e.getMessage(), e);
     } else {
       if (e instanceof RuntimeException) {
         // Because we are rethrowing the original exception, the original stacktrace will be
@@ -165,6 +169,10 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
         throw new RuntimeException(e);
       }
     }
+  }
+
+  public void showNewJavaError(String message, Throwable e) {
+    showNewError(message, StackTraceHelper.convertJavaStackTrace(e), JAVA_ERROR_COOKIE);
   }
 
   /**
@@ -255,28 +263,40 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
           }
         });
     options.put(
-        mApplicationContext.getString(R.string.catalyst_settings), new DevOptionHandler() {
-          @Override
-          public void onOptionSelected() {
-            Intent intent = new Intent(mApplicationContext, DevSettingsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mApplicationContext.startActivity(intent);
-          }
-        });
-    options.put(
-        mApplicationContext.getString(R.string.catalyst_inspect_element),
+        mDevSettings.isReloadOnJSChangeEnabled()
+            ? mApplicationContext.getString(R.string.catalyst_live_reload_off)
+            : mApplicationContext.getString(R.string.catalyst_live_reload),
         new DevOptionHandler() {
           @Override
           public void onOptionSelected() {
+            mDevSettings.setReloadOnJSChangeEnabled(!mDevSettings.isReloadOnJSChangeEnabled());
+          }
+        });
+    options.put(
+        mDevSettings.isElementInspectorEnabled()
+          ? mApplicationContext.getString(R.string.catalyst_element_inspector_off)
+          : mApplicationContext.getString(R.string.catalyst_element_inspector),
+        new DevOptionHandler() {
+          @Override
+          public void onOptionSelected() {
+            mDevSettings.setElementInspectorEnabled(!mDevSettings.isElementInspectorEnabled());
             mReactInstanceCommandsHandler.toggleElementInspector();
           }
         });
-
+    options.put(
+        mDevSettings.isFpsDebugEnabled()
+            ? mApplicationContext.getString(R.string.catalyst_perf_monitor_off)
+            : mApplicationContext.getString(R.string.catalyst_perf_monitor),
+        new DevOptionHandler() {
+          @Override
+          public void onOptionSelected() {
+            mDevSettings.setFpsDebugEnabled(!mDevSettings.isFpsDebugEnabled());
+          }
+        });
     if (mCurrentContext != null &&
-      mCurrentContext.getCatalystInstance() != null &&
-      !mCurrentContext.getCatalystInstance().isDestroyed() &&
-      mCurrentContext.getCatalystInstance().getBridge() != null &&
-      mCurrentContext.getCatalystInstance().getBridge().supportsProfiling()) {
+        mCurrentContext.getCatalystInstance() != null &&
+        !mCurrentContext.getCatalystInstance().isDestroyed() &&
+        mCurrentContext.getCatalystInstance().supportsProfiling()) {
       options.put(
           mApplicationContext.getString(
               mIsCurrentlyProfiling ? R.string.catalyst_stop_profile :
@@ -292,7 +312,6 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
                   mProfileIndex++;
                   Debug.stopMethodTracing();
                   mCurrentContext.getCatalystInstance()
-                      .getBridge()
                       .stopProfiler("profile", profileName);
                   Toast.makeText(
                       mCurrentContext,
@@ -300,7 +319,7 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
                       Toast.LENGTH_LONG).show();
                 } else {
                   mIsCurrentlyProfiling = true;
-                  mCurrentContext.getCatalystInstance().getBridge().startProfiler("profile");
+                  mCurrentContext.getCatalystInstance().startProfiler("profile");
                   Debug.startMethodTracingSampling(
                       profileName,
                       JAVA_SAMPLING_PROFILE_MEMORY_BYTES,
@@ -310,6 +329,15 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
             }
           });
     }
+    options.put(
+        mApplicationContext.getString(R.string.catalyst_settings), new DevOptionHandler() {
+          @Override
+          public void onOptionSelected() {
+            Intent intent = new Intent(mApplicationContext, DevSettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mApplicationContext.startActivity(intent);
+          }
+        });
 
     if (mCustomDevOptions.size() > 0) {
       options.putAll(mCustomDevOptions);
@@ -317,21 +345,24 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
 
     final DevOptionHandler[] optionHandlers = options.values().toArray(new DevOptionHandler[0]);
 
-    mDevOptionsDialog = new AlertDialog.Builder(mApplicationContext)
-        .setItems(options.keySet().toArray(new String[0]), new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            optionHandlers[which].onOptionSelected();
-            mDevOptionsDialog = null;
-          }
-        })
-        .setOnCancelListener(new DialogInterface.OnCancelListener() {
-          @Override
-          public void onCancel(DialogInterface dialog) {
-            mDevOptionsDialog = null;
-          }
-        })
-        .create();
+    mDevOptionsDialog =
+        new AlertDialog.Builder(mApplicationContext)
+            .setItems(
+                options.keySet().toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                    optionHandlers[which].onOptionSelected();
+                    mDevOptionsDialog = null;
+                  }
+                })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+              @Override
+              public void onCancel(DialogInterface dialog) {
+                mDevOptionsDialog = null;
+              }
+            })
+            .create();
     mDevOptionsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
     mDevOptionsDialog.show();
   }
@@ -454,7 +485,7 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
           "/profile_" + mProfileIndex + ".json");
       mProfileIndex++;
       Debug.stopMethodTracing();
-      mCurrentContext.getCatalystInstance().getBridge().stopProfiler("profile", profileName);
+      mCurrentContext.getCatalystInstance().stopProfiler("profile", profileName);
     }
 
     mCurrentContext = reactContext;
@@ -507,39 +538,47 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
     // anyway
     mDevServerHelper.launchChromeDevtools();
 
-    final WebsocketJavaScriptExecutor webSocketJSExecutor = new WebsocketJavaScriptExecutor();
-    webSocketJSExecutor.connect(
-        mDevServerHelper.getWebsocketProxyURL(),
-        new WebsocketJavaScriptExecutor.JSExecutorConnectCallback() {
-          @Override
-          public void onSuccess() {
-            progressDialog.dismiss();
-            UiThreadUtil.runOnUiThread(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    mReactInstanceCommandsHandler.onReloadWithJSDebugger(
-                        new ProxyJavaScriptExecutor(webSocketJSExecutor));
-                  }
-                });
-          }
+    JavaJSExecutor.Factory factory = new JavaJSExecutor.Factory() {
+      @Override
+      public JavaJSExecutor create() throws Exception {
+        WebsocketJavaScriptExecutor executor = new WebsocketJavaScriptExecutor();
+        SimpleSettableFuture<Boolean> future = new SimpleSettableFuture<>();
+        executor.connect(
+            mDevServerHelper.getWebsocketProxyURL(),
+            getExecutorConnectCallback(progressDialog, future));
+        // TODO(t9349129) Don't use timeout
+        try {
+          future.get(90, TimeUnit.SECONDS);
+          return executor;
+        } catch (ExecutionException e) {
+          throw (Exception) e.getCause();
+        } catch (InterruptedException | TimeoutException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    };
+    mReactInstanceCommandsHandler.onReloadWithJSDebugger(factory);
+  }
 
-          @Override
-          public void onFailure(final Throwable cause) {
-            progressDialog.dismiss();
-            FLog.e(ReactConstants.TAG, "Unable to connect to remote debugger", cause);
-            UiThreadUtil.runOnUiThread(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    showNewError(
-                        mApplicationContext.getString(R.string.catalyst_remotedbg_error),
-                        StackTraceHelper.convertJavaStackTrace(cause),
-                        JAVA_ERROR_COOKIE);
-                  }
-                });
-          }
-        });
+  private WebsocketJavaScriptExecutor.JSExecutorConnectCallback getExecutorConnectCallback(
+      final ProgressDialog progressDialog,
+      final SimpleSettableFuture<Boolean> future) {
+    return new WebsocketJavaScriptExecutor.JSExecutorConnectCallback() {
+      @Override
+      public void onSuccess() {
+        future.set(true);
+        progressDialog.dismiss();
+      }
+
+      @Override
+      public void onFailure(final Throwable cause) {
+        progressDialog.dismiss();
+        FLog.e(ReactConstants.TAG, "Unable to connect to remote debugger", cause);
+        future.setException(
+            new IOException(
+                mApplicationContext.getString(R.string.catalyst_remotedbg_error), cause));
+      }
+    };
   }
 
   private void reloadJSFromServer(final ProgressDialog progressDialog) {
@@ -567,15 +606,11 @@ public class DevSupportManager implements NativeModuleCallExceptionHandler {
                   public void run() {
                     if (cause instanceof DebugServerException) {
                       DebugServerException debugServerException = (DebugServerException) cause;
-                      showNewError(
-                          debugServerException.description,
-                          StackTraceHelper.convertJavaStackTrace(cause),
-                          JAVA_ERROR_COOKIE);
+                      showNewJavaError(debugServerException.description, cause);
                     } else {
-                      showNewError(
+                      showNewJavaError(
                           mApplicationContext.getString(R.string.catalyst_jsload_error),
-                          StackTraceHelper.convertJavaStackTrace(cause),
-                          JAVA_ERROR_COOKIE);
+                          cause);
                     }
                   }
                 });

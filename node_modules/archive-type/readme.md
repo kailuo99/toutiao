@@ -15,10 +15,10 @@ $ npm install --save archive-type
 ## Usage
 
 ```js
-var read = require('fs').readFileSync;
+var readFileSync = require('fs').readFileSync;
 var archiveType = require('archive-type');
 
-archiveType(read('foo.zip'));
+archiveType(readFileSync('foo.zip'));
 //=> {ext: 'zip', mime: 'application/zip'}
 ```
 
@@ -27,7 +27,7 @@ archiveType(read('foo.zip'));
 
 ### archiveType(buf)
 
-Returns [`7z`](https://github.com/kevva/is-7zip), [`bz2`](https://github.com/kevva/is-bzip2), [`gz`](https://github.com/kevva/is-gzip), [`rar`](https://github.com/kevva/is-rar), [`tar`](https://github.com/kevva/is-tar), [`zip`](https://github.com/kevva/is-zip) or `false`.
+Returns [`7z`](https://github.com/kevva/is-7zip), [`bz2`](https://github.com/kevva/is-bzip2), [`gz`](https://github.com/kevva/is-gzip), [`rar`](https://github.com/kevva/is-rar), [`tar`](https://github.com/kevva/is-tar), [`zip`](https://github.com/kevva/is-zip), [`xz`](https://github.com/kevva/is-xz) or `false`.
 
 #### buf
 

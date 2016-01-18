@@ -3,7 +3,7 @@
 //  Underscore.string is freely distributable under the terms of the MIT license.
 //  Documentation: https://github.com/epeli/underscore.string
 //  Some code is borrowed from MooTools and Alexandru Marasteanu.
-//  Version '3.2.2'
+//  Version '3.2.3'
 
 'use strict';
 
@@ -13,7 +13,7 @@ function s(value) {
   this._wrapped = value;
 }
 
-s.VERSION = '3.2.2';
+s.VERSION = '3.2.3';
 
 s.isBlank          = require('./isBlank');
 s.stripTags        = require('./stripTags');
@@ -76,6 +76,7 @@ s.toBoolean        = require('./toBoolean');
 s.exports          = require('./exports');
 s.escapeRegExp     = require('./helper/escapeRegExp');
 s.wrap             = require('./wrap');
+s.map              = require('./map');
 
 // Aliases
 s.strip     = s.trim;
@@ -88,6 +89,7 @@ s.contains  = s.include;
 s.q         = s.quote;
 s.toBool    = s.toBoolean;
 s.camelcase = s.camelize;
+s.mapChars  = s.map;
 
 
 // Implement chaining
@@ -98,13 +100,13 @@ s.prototype = {
 };
 
 function fn2method(key, fn) {
-    if (typeof fn !== "function") return;
-    s.prototype[key] = function() {
-      var args = [this._wrapped].concat(Array.prototype.slice.call(arguments));
-      var res = fn.apply(null, args);
-      // if the result is non-string stop the chain and return the value
-      return typeof res === 'string' ? new s(res) : res;
-    };
+  if (typeof fn !== "function") return;
+  s.prototype[key] = function() {
+    var args = [this._wrapped].concat(Array.prototype.slice.call(arguments));
+    var res = fn.apply(null, args);
+    // if the result is non-string stop the chain and return the value
+    return typeof res === 'string' ? new s(res) : res;
+  };
 }
 
 // Copy functions to instance methods for chaining
@@ -122,17 +124,17 @@ function prototype2method(methodName) {
 }
 
 var prototypeMethods = [
-  "toUpperCase",
-  "toLowerCase",
-  "split",
-  "replace",
-  "slice",
-  "substring",
-  "substr",
-  "concat"
+    "toUpperCase",
+    "toLowerCase",
+    "split",
+    "replace",
+    "slice",
+    "substring",
+    "substr",
+    "concat"
 ];
 
-for (var key in prototypeMethods) prototype2method(prototypeMethods[key]);
+for (var method in prototypeMethods) prototype2method(prototypeMethods[method]);
 
 
 module.exports = s;

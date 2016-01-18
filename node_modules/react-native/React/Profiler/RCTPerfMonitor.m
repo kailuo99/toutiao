@@ -20,9 +20,9 @@
 #import "RCTFPSGraph.h"
 #import "RCTInvalidating.h"
 #import "RCTJavaScriptExecutor.h"
+#import "RCTJSCExecutor.h"
 #import "RCTPerformanceLogger.h"
 #import "RCTRootView.h"
-#import "RCTSparseArray.h"
 #import "RCTUIManager.h"
 
 static NSString *const RCTPerfMonitorKey = @"RCTPerfMonitorKey";
@@ -312,7 +312,7 @@ RCT_EXPORT_MODULE()
                        forMode:NSRunLoopCommonModes];
 
   id<RCTJavaScriptExecutor> executor = [_bridge valueForKey:@"javaScriptExecutor"];
-  if ([executor isKindOfClass:NSClassFromString(@"RCTContextExecutor")]) {
+  if ([executor isKindOfClass:[RCTJSCExecutor class]]) {
     self.container.frame = (CGRect) {
       self.container.frame.origin, {
         self.container.frame.size.width + 44,
@@ -441,10 +441,10 @@ RCT_EXPORT_MODULE()
 
 - (void)updateStats
 {
-  RCTSparseArray *views = [_bridge.uiManager valueForKey:@"viewRegistry"];
+  NSDictionary<NSNumber *, UIView *> *views = [_bridge.uiManager valueForKey:@"viewRegistry"];
   NSUInteger viewCount = views.count;
   NSUInteger visibleViewCount = 0;
-  for (UIView *view in views.allObjects) {
+  for (UIView *view in views.allValues) {
     if (view.window || view.superview.window) {
       visibleViewCount++;
     }

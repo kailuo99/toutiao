@@ -16,6 +16,8 @@
 #include "JSLoader.h"
 #include "ReadableNativeArray.h"
 #include "ProxyExecutor.h"
+#include "OnLoad.h"
+#include <algorithm>
 
 #ifdef WITH_FBSYSTRACE
 #include <fbsystrace.h>
@@ -58,10 +60,6 @@ struct ReadableNativeMapKeySetIterator : public Countable {
                                   const RefPtr<NativeMap>& mapRef_)
     : iterator(std::move(it))
     , mapRef(mapRef_) {}
-};
-
-struct NativeRunnable : public Countable {
-  std::function<void()> callable;
 };
 
 static jobject createReadableNativeMapWithContents(JNIEnv* env, folly::dynamic map) {
@@ -515,7 +513,13 @@ static jstring getNextKey(JNIEnv* env, jobject obj) {
 } // namespace iterator
 } // namespace map
 
+namespace {
+
 namespace runnable {
+
+struct NativeRunnable : public Countable {
+  std::function<void()> callable;
+};
 
 static jclass gNativeRunnableClass;
 static jmethodID gNativeRunnableCtor;
@@ -558,6 +562,13 @@ static void makeJavaCall(JNIEnv* env, jobject callback, MethodCall&& call) {
   if (call.arguments.isNull()) {
     return;
   }
+
+  #ifdef WITH_FBSYSTRACE
+  if (call.callId != -1) {
+    fbsystrace_end_async_flow(TRACE_TAG_REACT_APPS, "native", call.callId);
+  }
+  #endif
+
   auto newArray = ReadableNativeArray::newObjectCxxArgs(std::move(call.arguments));
   env->CallVoidMethod(callback, gCallbackMethod, call.moduleId, call.methodId, newArray.get());
 }
@@ -620,12 +631,12 @@ static void create(JNIEnv* env, jobject obj, jobject executor, jobject callback,
 
 static void executeApplicationScript(
     const RefPtr<Bridge>& bridge,
-    const std::string script,
-    const std::string sourceUri) {
+    const std::string& script,
+    const std::string& sourceUri) {
   try {
     // Execute the application script and collect/dispatch any native calls that might have occured
     bridge->executeApplicationScript(script, sourceUri);
-    bridge->executeJSCall("BatchedBridge", "flushedQueue", std::vector<folly::dynamic>());
+    bridge->flush();
   } catch (...) {
     translatePendingCppExceptionToJavaException();
   }
@@ -679,13 +690,12 @@ static void callFunction(JNIEnv* env, jobject obj, jint moduleId, jint methodId,
                          NativeArray::jhybridobject args) {
   auto bridge = extractRefPtr<Bridge>(env, obj);
   auto arguments = cthis(wrap_alias(args));
-  std::vector<folly::dynamic> call{
-    (double) moduleId,
-    (double) methodId,
-    std::move(arguments->array),
-  };
   try {
-    bridge->executeJSCall("BatchedBridge", "callFunctionReturnFlushedQueue", std::move(call));
+    bridge->callFunction(
+      (double) moduleId,
+      (double) methodId,
+      std::move(arguments->array)
+    );
   } catch (...) {
     translatePendingCppExceptionToJavaException();
   }
@@ -695,12 +705,11 @@ static void invokeCallback(JNIEnv* env, jobject obj, jint callbackId,
                            NativeArray::jhybridobject args) {
   auto bridge = extractRefPtr<Bridge>(env, obj);
   auto arguments = cthis(wrap_alias(args));
-  std::vector<folly::dynamic> call{
-    (double) callbackId,
-    std::move(arguments->array)
-  };
   try {
-    bridge->executeJSCall("BatchedBridge", "invokeCallbackAndReturnFlushedQueue", std::move(call));
+    bridge->invokeCallback(
+      (double) callbackId,
+      std::move(arguments->array)
+    );
   } catch (...) {
     translatePendingCppExceptionToJavaException();
   }
@@ -726,6 +735,16 @@ static void stopProfiler(JNIEnv* env, jobject obj, jstring title, jstring filena
   bridge->stopProfiler(fromJString(env, title), fromJString(env, filename));
 }
 
+static void handleMemoryPressureModerate(JNIEnv* env, jobject obj) {
+  auto bridge = extractRefPtr<Bridge>(env, obj);
+  bridge->handleMemoryPressureModerate();
+}
+
+static void handleMemoryPressureCritical(JNIEnv* env, jobject obj) {
+  auto bridge = extractRefPtr<Bridge>(env, obj);
+  bridge->handleMemoryPressureCritical();
+}
+
 } // namespace bridge
 
 namespace executors {
@@ -742,6 +761,12 @@ static void createProxyExecutor(JNIEnv *env, jobject obj, jobject executorInstan
 }
 
 } // namespace executors
+
+}
+
+jmethodID getLogMarkerMethod() {
+  return bridge::gLogMarkerMethod;
+}
 
 extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   return initialize(vm, [] {
@@ -808,7 +833,7 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
     registerNatives("com/facebook/react/bridge/ProxyJavaScriptExecutor", {
         makeNativeMethod(
-          "initialize", "(Lcom/facebook/react/bridge/ProxyJavaScriptExecutor$JavaJSExecutor;)V",
+          "initialize", "(Lcom/facebook/react/bridge/JavaJSExecutor;)V",
           executors::createProxyExecutor),
     });
 
@@ -831,6 +856,9 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
         makeNativeMethod("supportsProfiling", bridge::supportsProfiling),
         makeNativeMethod("startProfiler", bridge::startProfiler),
         makeNativeMethod("stopProfiler", bridge::stopProfiler),
+        makeNativeMethod("handleMemoryPressureModerate", bridge::handleMemoryPressureModerate),
+        makeNativeMethod("handleMemoryPressureCritical", bridge::handleMemoryPressureCritical),
+
     });
 
     jclass nativeRunnableClass = env->FindClass("com/facebook/react/bridge/queue/NativeRunnable");

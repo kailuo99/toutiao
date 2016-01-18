@@ -221,7 +221,7 @@ assert.objectContent = function (obj, content) {
  * @param {Object} content An object of key/values the file should contains
  */
 
-assert.JSONFileContent = function (filename, content) {
+assert.JSONFileContent = assert.jsonFileContent = function (filename, content) {
   var obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
   assert.objectContent(obj, content);
 };

@@ -4,7 +4,7 @@
 
 [![saucelabs][saucelabs-image]][saucelabs-url]
 
-[travis-image]: https://img.shields.io/travis/feross/is-buffer.svg?style=flat
+[travis-image]: https://img.shields.io/travis/feross/is-buffer/master.svg?style=flat
 [travis-url]: https://travis-ci.org/feross/is-buffer
 [npm-image]: https://img.shields.io/npm/v/is-buffer.svg?style=flat
 [npm-url]: https://npmjs.org/package/is-buffer

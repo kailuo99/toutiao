@@ -21,3 +21,5 @@ function spawn(command, args, options) {
 
 module.exports       = spawn;
 module.exports.spawn = spawn;
+module.exports._parse = parse;
+module.exports._enoent = enoent;

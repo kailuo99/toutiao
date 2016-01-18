@@ -58,7 +58,9 @@ var TabIndex = React.createClass({
                                       title={val.title}
                                       selected={this.state.tabIndex === val.key}
                                       iconName={val.icon}
+                                      key={val.key}
                                       selectedIconName={val.selectedIcon}
+                          
                                       onPress={() => {
                                         this.setState({ tabIndex: val.key,});
                                       }}>
@@ -77,6 +79,7 @@ var TabIndex = React.createClass({
 var styles = StyleSheet.create({
     container: {
       flex: 1,
+      marginBottom:0
     },
 });
 

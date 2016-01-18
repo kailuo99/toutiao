@@ -3,6 +3,9 @@
 **encoding** is a simple wrapper around [node-iconv](https://github.com/bnoordhuis/node-iconv) and [iconv-lite](https://github.com/ashtuchkin/iconv-lite/) to convert strings from one encoding to another. If node-iconv is not available for some reason,
 iconv-lite will be used instead of it as a fallback.
 
+[![Build Status](https://secure.travis-ci.org/andris9/encoding.svg)](http://travis-ci.org/andris9/Nodemailer)
+[![npm version](https://badge.fury.io/js/encoding.svg)](http://badge.fury.io/js/encoding)
+
 ## Install
 
 Install through npm

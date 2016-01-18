@@ -14,6 +14,7 @@
 #import "RCTConvert.h"
 #import "RCTEventDispatcher.h"
 #import "RCTLog.h"
+#import "RCTRefreshControl.h"
 #import "RCTUIManager.h"
 #import "RCTUtils.h"
 #import "UIView+Private.h"
@@ -144,6 +145,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 @property (nonatomic, copy) NSIndexSet *stickyHeaderIndices;
 @property (nonatomic, assign) BOOL centerContent;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @end
 
@@ -181,7 +183,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)handleCustomPan:(__unused UIPanGestureRecognizer *)sender
 {
-  if ([self _shouldDisableScrollInteraction]) {
+  if ([self _shouldDisableScrollInteraction] && ![[RCTUIManager JSResponder] isKindOfClass:[RCTScrollView class]]) {
     self.panGestureRecognizer.enabled = NO;
     self.panGestureRecognizer.enabled = YES;
     // TODO: If mid bounce, animate the scroll view to a non-bounced position
@@ -352,6 +354,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   return hitView ?: [super hitTest:point withEvent:event];
 }
 
+- (void)setRefreshControl:(UIRefreshControl *)refreshControl
+{
+  if (_refreshControl) {
+    [_refreshControl removeFromSuperview];
+  }
+  _refreshControl = refreshControl;
+  [self addSubview:_refreshControl];
+}
+
 @end
 
 @implementation RCTScrollView
@@ -365,7 +376,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   CGRect _lastClippedToRect;
 }
 
-@synthesize nativeMainScrollDelegate = _nativeMainScrollDelegate;
+@synthesize nativeScrollDelegate = _nativeScrollDelegate;
 
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
 {
@@ -400,20 +411,31 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (void)insertReactSubview:(UIView *)view atIndex:(__unused NSInteger)atIndex
 {
-  RCTAssert(_contentView == nil, @"RCTScrollView may only contain a single subview");
-  _contentView = view;
-  [_scrollView addSubview:view];
+  if ([view isKindOfClass:[RCTRefreshControl class]]) {
+    _scrollView.refreshControl = (RCTRefreshControl*)view;
+  } else {
+    RCTAssert(_contentView == nil, @"RCTScrollView may only contain a single subview");
+    _contentView = view;
+    [_scrollView addSubview:view];
+  }
 }
 
 - (void)removeReactSubview:(UIView *)subview
 {
-  RCTAssert(_contentView == subview, @"Attempted to remove non-existent subview");
-  _contentView = nil;
-  [subview removeFromSuperview];
+  if ([subview isKindOfClass:[RCTRefreshControl class]]) {
+    _scrollView.refreshControl = nil;
+  } else {
+    RCTAssert(_contentView == subview, @"Attempted to remove non-existent subview");
+    _contentView = nil;
+    [subview removeFromSuperview];
+  }
 }
 
-- (NSArray<UIView<RCTComponent> *> *)reactSubviews
+- (NSArray<UIView *> *)reactSubviews
 {
+  if (_contentView && _scrollView.refreshControl) {
+    return @[_contentView, _scrollView.refreshControl];
+  }
   return _contentView ? @[_contentView] : @[];
 }
 
@@ -532,14 +554,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 - (void)delegateMethod:(UIScrollView *)scrollView           \
 {                                                           \
   [_eventDispatcher sendScrollEventWithType:eventName reactTag:self.reactTag scrollView:scrollView userData:nil]; \
-  if ([_nativeMainScrollDelegate respondsToSelector:_cmd]) { \
-    [_nativeMainScrollDelegate delegateMethod:scrollView]; \
+  if ([_nativeScrollDelegate respondsToSelector:_cmd]) { \
+    [_nativeScrollDelegate delegateMethod:scrollView]; \
   } \
 }
 
 #define RCT_FORWARD_SCROLL_EVENT(call) \
-if ([_nativeMainScrollDelegate respondsToSelector:_cmd]) { \
-  [_nativeMainScrollDelegate call]; \
+if ([_nativeScrollDelegate respondsToSelector:_cmd]) { \
+  [_nativeScrollDelegate call]; \
 }
 
 RCT_SCROLL_EVENT_HANDLER(scrollViewDidEndScrollingAnimation, RCTScrollEventTypeEndDeceleration)
@@ -696,8 +718,8 @@ RCT_SCROLL_EVENT_HANDLER(scrollViewDidZoom, RCTScrollEventTypeMove)
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 {
-  if ([_nativeMainScrollDelegate respondsToSelector:_cmd]) {
-    return [_nativeMainScrollDelegate scrollViewShouldScrollToTop:scrollView];
+  if ([_nativeScrollDelegate respondsToSelector:_cmd]) {
+    return [_nativeScrollDelegate scrollViewShouldScrollToTop:scrollView];
   }
   return YES;
 }
@@ -842,6 +864,34 @@ RCT_SET_AND_PRESERVE_OFFSET(setScrollIndicatorInsets, UIEdgeInsets);
 - (id)valueForUndefinedKey:(NSString *)key
 {
   return [_scrollView valueForKey:key];
+}
+
+- (void)setOnRefreshStart:(RCTDirectEventBlock)onRefreshStart
+{
+  if (!onRefreshStart) {
+    _onRefreshStart = nil;
+    _scrollView.refreshControl = nil;
+    return;
+  }
+  _onRefreshStart = [onRefreshStart copy];
+
+  if (!_scrollView.refreshControl) {
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshControlValueChanged) forControlEvents:UIControlEventValueChanged];
+    _scrollView.refreshControl = refreshControl;
+  }
+}
+
+- (void)refreshControlValueChanged
+{
+  if (self.onRefreshStart) {
+    self.onRefreshStart(nil);
+  }
+}
+
+- (void)endRefreshing
+{
+  [_scrollView.refreshControl endRefreshing];
 }
 
 @end

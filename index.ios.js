@@ -1,18 +1,19 @@
 'use strict';
 
-var React = require('react-native');
-var TabIndex = require('./app/ios/views/TabIndex'); // tab页
-var Detail = require('./app/ios/views/Detail'); // 详情页
-var Icon = require('react-native-vector-icons/Ionicons');
-var Statistic = require('./app/ios/modules/Statistic');
-var {
+import React, {
   AppRegistry,
   StyleSheet,
   Navigator,
   AsyncStorage,
   TouchableOpacity,
   Text
-} = React;
+} from 'react-native';
+
+import TabIndex from './app/ios/views/TabIndex';
+import Detail from './app/ios/views/Detail';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Statistic from './app/ios/modules/Statistic';
+
 
 var STAR_KEY = "toutiao-star-";
 
@@ -97,7 +98,7 @@ var toutiao = React.createClass({
                       style={styles.navBar}
                     />;
         } else {
-            return null;
+            return <Text style={{height:0,}}/>;
         }
     },
     // Nav使用

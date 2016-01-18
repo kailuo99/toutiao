@@ -27,14 +27,14 @@ describe('Tree', function () {
     });
   });
 
-  describe('created with default options', function () {
+  describe('created with default escodegen options', function () {
     it('return the generated source code', function () {
       var tree = program('(function () {\n\tconsole.log("foo");\n\tconsole.log("bar");\n})();');
       assert.equal(tree.toString().charAt(15), ' ');
     });
   });
 
-  describe('created with tab formatting option', function () {
+  describe('created with tab formatting escodegen option', function () {
     it('return the generated source code', function () {
       var tree = program('(function () {\n  console.log("foo");\n  console.log("bar");\n})();', {
         format: {
@@ -47,4 +47,29 @@ describe('Tree', function () {
     });
   });
 
+  describe('created with default esprima options', function () {
+    it('parses the source code as a script', function () {
+      assert.doesNotThrow(function () {
+        program('var a = 1;');
+      }, Error);
+    });
+    it('does not parse the source code as a module', function () {
+      assert.throws(function() {
+        program('var a = 1;\nexport default a;');
+      }, Error);
+    });
+  });
+
+  describe('created with es2015 module esprima options', function () {
+    it('does not parse the module source code when the sourceType configuration is missing', function () {
+      assert.throws(function() {
+        program('var a = 1;\nexport default a;');
+      }, Error);
+    });
+    it('parses the source code as a module when the sourceType configuration is present', function () {
+      assert.doesNotThrow(function () {
+        program('var a = 1;\nexport default a;', {}, { sourceType: 'module'});
+      }, Error);
+    });
+  });
 });

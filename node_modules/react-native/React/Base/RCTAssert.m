@@ -12,6 +12,7 @@
 
 NSString *const RCTErrorDomain = @"RCTErrorDomain";
 NSString *const RCTJSStackTraceKey = @"RCTJSStackTraceKey";
+NSString *const RCTFatalExceptionName = @"RCTFatalException";
 
 static NSString *const RCTAssertFunctionStack = @"RCTAssertFunctionStack";
 
@@ -118,7 +119,7 @@ void _RCTAssertFormat(
 
 void RCTFatal(NSError *error)
 {
-  _RCTLogInternal(RCTLogLevelFatal, NULL, 0, @"%@", [error localizedDescription]);
+  _RCTLogNativeInternal(RCTLogLevelFatal, NULL, 0, @"%@", [error localizedDescription]);
 
   RCTFatalHandler fatalHandler = RCTGetFatalHandler();
   if (fatalHandler) {
@@ -127,8 +128,9 @@ void RCTFatal(NSError *error)
 #if DEBUG
     @try {
 #endif
+      NSString *name = [NSString stringWithFormat:@"%@: %@", RCTFatalExceptionName, [error localizedDescription]];
       NSString *message = RCTFormatError([error localizedDescription], error.userInfo[RCTJSStackTraceKey], 75);
-      [NSException raise:@"RCTFatalException" format:@"%@", message];
+      [NSException raise:name format:@"%@", message];
 #if DEBUG
     } @catch (NSException *e) {}
 #endif
@@ -145,7 +147,7 @@ RCTFatalHandler RCTGetFatalHandler(void)
   return RCTCurrentFatalHandler;
 }
 
-NSString *RCTFormatError(NSString *message, NSArray *stackTrace, NSUInteger maxMessageLength)
+NSString *RCTFormatError(NSString *message, NSArray<NSDictionary<NSString *, id> *> *stackTrace, NSUInteger maxMessageLength)
 {
   if (maxMessageLength > 0 && message.length > maxMessageLength) {
     message = [[message substringToIndex:maxMessageLength] stringByAppendingString:@"..."];
@@ -154,10 +156,10 @@ NSString *RCTFormatError(NSString *message, NSArray *stackTrace, NSUInteger maxM
   NSMutableString *prettyStack = [NSMutableString string];
   if (stackTrace) {
     [prettyStack appendString:@", stack:\n"];
-    for (NSDictionary *frame in stackTrace) {
+    for (NSDictionary<NSString *, id> *frame in stackTrace) {
       [prettyStack appendFormat:@"%@@%@:%@\n", frame[@"methodName"], frame[@"lineNumber"], frame[@"column"]];
     }
   }
 
-  return [NSString stringWithFormat:@"Message: %@%@", message, prettyStack];
+  return [NSString stringWithFormat:@"%@%@", message, prettyStack];
 }

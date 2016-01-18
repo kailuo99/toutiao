@@ -16,7 +16,7 @@ exports.create = function () {
     } catch (err) {
       file = new File({
         cwd: process.cwd(),
-        base: path.basename(filepath),
+        base: process.cwd(),
         path: filepath,
         contents: null
       });

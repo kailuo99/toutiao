@@ -24,7 +24,7 @@ public abstract class ViewGroupManager <T extends ViewGroup>
   }
 
   @Override
-  public Class<LayoutShadowNode> getShadowNodeClass() {
+  public Class<? extends LayoutShadowNode> getShadowNodeClass() {
     return LayoutShadowNode.class;
   }
 
@@ -46,6 +46,12 @@ public abstract class ViewGroupManager <T extends ViewGroup>
 
   public void removeViewAt(T parent, int index) {
     parent.removeViewAt(index);
+  }
+
+  public void removeAllViews(T parent) {
+    for (int i = getChildCount(parent) - 1; i >= 0; i--) {
+      removeViewAt(parent, i);
+    }
   }
 
   /**

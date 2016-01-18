@@ -8,7 +8,7 @@ function ghGot(path, opts) {
 		return Promise.reject(new TypeError('Path should be a string'));
 	}
 
-	opts = objectAssign({json: true}, opts);
+	opts = objectAssign({json: true, endpoint: 'https://api.github.com/'}, opts);
 
 	opts.headers = objectAssign({
 		'accept': 'application/vnd.github.v3+json',
@@ -28,7 +28,7 @@ function ghGot(path, opts) {
 	}
 
 	var endpoint = env.GITHUB_ENDPOINT ? env.GITHUB_ENDPOINT.replace(/[^/]$/, '$&/') : opts.endpoint;
-	var url = (endpoint || 'https://api.github.com/') + path;
+	var url = /https?/.test(path) ? path : endpoint + path;
 
 	if (opts.stream) {
 		return got.stream(url, opts);

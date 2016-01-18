@@ -31,7 +31,8 @@ module.exports = function (proxy, opts) {
 	return tunnelAgent[method](objectAssign({
 		proxy: {
 			host: proxy.hostname,
-			port: port
+			port: port,
+			proxyAuth: proxy.auth
 		}
 	}, opts));
 };

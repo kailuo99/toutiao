@@ -19,7 +19,7 @@ jest.setMock('worker-farm', function() { return () => {}; })
 const Promise = require('promise');
 
 var Bundler = require('../../Bundler');
-var FileWatcher = require('../../FileWatcher');
+var FileWatcher = require('../../DependencyResolver/FileWatcher');
 var Server = require('../');
 var Server = require('../../Server');
 var AssetServer = require('../../AssetServer');
@@ -110,11 +110,13 @@ describe('processRequest', () => {
         entryFile: 'index.ios.js',
         inlineSourceMap: false,
         minify: false,
+        hot: false,
         runModule: true,
         sourceMapUrl: 'index.ios.includeRequire.map',
         dev: true,
         platform: undefined,
         runBeforeMainModule: ['InitializeJavaScriptAppEngine'],
+        unbundle: false,
       });
     });
   });
@@ -129,11 +131,13 @@ describe('processRequest', () => {
         entryFile: 'index.js',
         inlineSourceMap: false,
         minify: false,
+        hot: false,
         runModule: true,
         sourceMapUrl: 'index.map?platform=ios',
         dev: true,
         platform: 'ios',
         runBeforeMainModule: ['InitializeJavaScriptAppEngine'],
+        unbundle: false,
       });
     });
   });
@@ -270,10 +274,12 @@ describe('processRequest', () => {
           entryFile: 'foo file',
           inlineSourceMap: false,
           minify: false,
+          hot: false,
           runModule: true,
           dev: true,
           platform: undefined,
           runBeforeMainModule: ['InitializeJavaScriptAppEngine'],
+          unbundle: false,
         })
       );
     });
@@ -287,11 +293,13 @@ describe('processRequest', () => {
             entryFile: 'path/to/foo.js',
             inlineSourceMap: false,
             minify: false,
+            hot: false,
             runModule: false,
             sourceMapUrl: '/path/to/foo.map?dev=false&runModule=false',
             dev: false,
             platform: undefined,
             runBeforeMainModule: ['InitializeJavaScriptAppEngine'],
+            unbundle: false,
           })
         );
     });

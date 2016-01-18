@@ -41,6 +41,17 @@ ghGot('users/sindresorhus', {token: 'foo'}).then(res => {
 });
 ```
 
+Or:
+
+```js
+const ghGot = require('gh-got');
+
+ghGot('https://api.github.com/users/sindresorhus', {token: 'foo'}).then(res => {
+	console.log(res.body.login);
+	//=> 'sindresorhus'
+});
+```
+
 
 ## API
 

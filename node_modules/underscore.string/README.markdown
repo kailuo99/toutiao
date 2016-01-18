@@ -18,7 +18,7 @@ Upgrading from 2.x to 3.x? Please read the [changelog][c].
 
 ## Usage
 
-### In Node.js and Browserify
+### For Node.js, Browserify and Webpack
 
 Install from npm
 
@@ -248,7 +248,7 @@ unescapeHTML("&lt;div&gt;Blah&nbsp;blah blah&lt;/div&gt;");
 #### insert(string, index, substring) => string
 
 ```javascript
-insert("Hello ", 6, "world");
+insert("Hellworld", 4, "o ");
 // => "Hello world"
 ```
 
@@ -767,6 +767,28 @@ toBoolean("truthy", ["truthy"], ["falsy"]);
 
 toBoolean("true only at start", [/^true/]);
 // => true
+```
+
+#### map(string, function) => string
+
+Creates a new string with the results of calling a provided function on every character of the given string.
+
+```javascript
+map("Hello world", function(x) {
+  return x;
+});
+// => "Hello world"
+
+map(12345, function(x) {
+  return x;
+});
+// => "12345"
+
+map("Hello world", function(x) {
+  if (x === 'o') x = 'O';
+  return x;
+});
+// => "HellO wOrld"
 ```
 
 ### Library functions

@@ -43,7 +43,9 @@ var Detail = React.createClass({
             <View style={styles.content}>
               <WebView
               url={"http://m.yergoo.com/api/news/app/" + this.props.id}
-              automaticallyAdjustContentInset={true}
+              automaticallyAdjustContentInset={false}              scalesPageToFit={true}
+              contentInset={{top:20,left:0,bottom:20,right:0}}
+              startInLoadingState={true}
               />
             </View>
         </View>

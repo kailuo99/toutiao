@@ -27,6 +27,10 @@ RCT_EXTERN id RCTJSONClean(id object);
 // Get MD5 hash of a string
 RCT_EXTERN NSString *RCTMD5Hash(NSString *string);
 
+// Execute the specified block on the main thread. Unlike dispatch_sync/async
+// this will not context-switch if we're already running on the main thread.
+RCT_EXTERN void RCTExecuteOnMainThread(dispatch_block_t block, BOOL sync);
+
 // Get screen metrics in a thread-safe way
 RCT_EXTERN CGFloat RCTScreenScale(void);
 RCT_EXTERN CGSize RCTScreenSize(void);
@@ -45,9 +49,9 @@ RCT_EXTERN BOOL RCTClassOverridesClassMethod(Class cls, SEL selector);
 RCT_EXTERN BOOL RCTClassOverridesInstanceMethod(Class cls, SEL selector);
 
 // Creates a standardized error object
-RCT_EXTERN NSDictionary *RCTMakeError(NSString *message, id toStringify, NSDictionary *extraData);
-RCT_EXTERN NSDictionary *RCTMakeAndLogError(NSString *message, id toStringify, NSDictionary *extraData);
-RCT_EXTERN NSDictionary *RCTJSErrorFromNSError(NSError *error);
+RCT_EXTERN NSDictionary<NSString *, id> *RCTMakeError(NSString *message, id toStringify, NSDictionary<NSString *, id> *extraData);
+RCT_EXTERN NSDictionary<NSString *, id> *RCTMakeAndLogError(NSString *message, id toStringify, NSDictionary<NSString *, id> *extraData);
+RCT_EXTERN NSDictionary<NSString *, id> *RCTJSErrorFromNSError(NSError *error);
 
 // Returns YES if React is running in a test environment
 RCT_EXTERN BOOL RCTRunningInTestEnvironment(void);
@@ -80,6 +84,9 @@ RCT_EXTERN NSError *RCTErrorWithMessage(NSString *message);
 RCT_EXTERN id RCTNilIfNull(id value);
 RCT_EXTERN id RCTNullIfNil(id value);
 
+// Convert NaN or infinite values to zero, as these aren't JSON-safe
+RCT_EXTERN double RCTZeroIfNaN(double value);
+
 // Convert data to a Base64-encoded data URL
 RCT_EXTERN NSURL *RCTDataURL(NSString *mimeType, NSData *data);
 
@@ -92,3 +99,13 @@ RCT_EXTERN NSString *RCTBundlePathForURL(NSURL *URL);
 
 // Determines if a given image URL actually refers to an XCAsset
 RCT_EXTERN BOOL RCTIsXCAssetURL(NSURL *imageURL);
+
+// Converts a CGColor to a hex string
+RCT_EXTERN NSString *RCTColorToHexString(CGColorRef color);
+
+// Get standard localized string (if it exists)
+RCT_EXTERN NSString *RCTUIKitLocalizedString(NSString *string);
+
+// URL manipulation
+RCT_EXTERN NSString *RCTGetURLQueryParam(NSURL *URL, NSString *param);
+RCT_EXTERN NSURL *RCTURLByReplacingQueryParam(NSURL *URL, NSString *param, NSString *value);

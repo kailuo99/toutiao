@@ -12,19 +12,8 @@
 
 var Commons = require("./commons");
 var LISTENERS = Commons.LISTENERS;
+var ATTRIBUTE = Commons.ATTRIBUTE;
 var newNode = Commons.newNode;
-
-//-----------------------------------------------------------------------------
-// Constants
-//-----------------------------------------------------------------------------
-
-/**
- * A value of kind for listeners which are registered as an attribute.
- *
- * @type {number}
- * @private
- */
-var ATTRIBUTE = 3;
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -57,8 +46,8 @@ function getAttributeListener(eventTarget, type) {
  * @returns {void}
  */
 function setAttributeListener(eventTarget, type, listener) {
-    if (listener != null && typeof listener !== "function") {
-        throw new TypeError("listener should be a function.");
+    if (typeof listener !== "function" && typeof listener !== "object") {
+        listener = null; // eslint-disable-line no-param-reassign
     }
 
     var prev = null;

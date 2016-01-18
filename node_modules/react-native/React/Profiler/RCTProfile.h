@@ -16,8 +16,8 @@
  *
  * This file provides a set of functions and macros for performance profiling
  *
- * NOTE: This API is a work in a work in progress, please consider carefully
- * before before using it.
+ * NOTE: This API is a work in progress, please consider carefully before
+ * using it.
  */
 
 RCT_EXTERN NSString *const RCTProfileDidStartProfiling;
@@ -66,13 +66,16 @@ RCT_EXTERN void _RCTProfileBeginEvent(NSThread *calleeThread,
                                       uint64_t tag,
                                       NSString *name,
                                       NSDictionary *args);
-#define RCTProfileBeginEvent(...) { \
-  NSThread *calleeThread = [NSThread currentThread]; \
-  NSTimeInterval time = CACurrentMediaTime(); \
-  dispatch_async(RCTProfileGetQueue(), ^{ \
-    _RCTProfileBeginEvent(calleeThread, time, __VA_ARGS__); \
-  }); \
-}
+#define RCT_PROFILE_BEGIN_EVENT(...) \
+  do { \
+    if (RCTProfileIsProfiling()) { \
+      NSThread *calleeThread = [NSThread currentThread]; \
+      NSTimeInterval time = CACurrentMediaTime(); \
+      dispatch_async(RCTProfileGetQueue(), ^{ \
+        _RCTProfileBeginEvent(calleeThread, time, __VA_ARGS__); \
+      }); \
+    } \
+  } while(0)
 
 /**
  * The ID returned by BeginEvent should then be passed into EndEvent, with the
@@ -86,21 +89,24 @@ RCT_EXTERN void _RCTProfileEndEvent(NSThread *calleeThread,
                                     NSString *category,
                                     NSDictionary *args);
 
-#define RCTProfileEndEvent(...) { \
-  NSThread *calleeThread = [NSThread currentThread]; \
-  NSString *threadName = RCTCurrentThreadName(); \
-  NSTimeInterval time = CACurrentMediaTime(); \
-  dispatch_async(RCTProfileGetQueue(), ^{ \
-    _RCTProfileEndEvent(calleeThread, threadName, time, __VA_ARGS__); \
-  }); \
-}
+#define RCT_PROFILE_END_EVENT(...) \
+  do { \
+    if (RCTProfileIsProfiling()) { \
+      NSThread *calleeThread = [NSThread currentThread]; \
+      NSString *threadName = RCTCurrentThreadName(); \
+      NSTimeInterval time = CACurrentMediaTime(); \
+      dispatch_async(RCTProfileGetQueue(), ^{ \
+        _RCTProfileEndEvent(calleeThread, threadName, time, __VA_ARGS__); \
+      }); \
+    } \
+  } while(0)
 
 /**
  * Collects the initial event information for the event and returns a reference ID
  */
-RCT_EXTERN int RCTProfileBeginAsyncEvent(uint64_t tag,
-                                         NSString *name,
-                                         NSDictionary *args);
+RCT_EXTERN NSUInteger RCTProfileBeginAsyncEvent(uint64_t tag,
+                                                NSString *name,
+                                                NSDictionary *args);
 
 /**
  * The ID returned by BeginEvent should then be passed into EndEvent, with the
@@ -109,7 +115,7 @@ RCT_EXTERN int RCTProfileBeginAsyncEvent(uint64_t tag,
  */
 RCT_EXTERN void RCTProfileEndAsyncEvent(uint64_t tag,
                                         NSString *category,
-                                        int cookie,
+                                        NSUInteger cookie,
                                         NSString *name,
                                         NSDictionary *args);
 
@@ -118,6 +124,7 @@ RCT_EXTERN void RCTProfileEndAsyncEvent(uint64_t tag,
  */
 RCT_EXTERN void RCTProfileImmediateEvent(uint64_t tag,
                                          NSString *name,
+                                         NSTimeInterval time,
                                          char scope);
 
 /**
@@ -128,9 +135,9 @@ RCT_EXTERN void RCTProfileImmediateEvent(uint64_t tag,
  */
 #define RCTProfileBlock(block, tag, category, arguments) \
 ^{ \
-  RCTProfileBeginEvent(tag, @(__PRETTY_FUNCTION__), nil); \
+  RCT_PROFILE_BEGIN_EVENT(tag, @(__PRETTY_FUNCTION__), nil); \
   block(); \
-  RCTProfileEndEvent(tag, category, arguments); \
+  RCT_PROFILE_END_EVENT(tag, category, arguments); \
 }
 
 /**
@@ -189,8 +196,11 @@ RCT_EXTERN void RCTProfileRegisterCallbacks(RCTProfileCallbacks *);
 #define RCTProfileInit(...)
 #define RCTProfileEnd(...) @""
 
-#define RCTProfileBeginEvent(...)
-#define RCTProfileEndEvent(...)
+#define _RCTProfileBeginEvent(...)
+#define _RCTProfileEndEvent(...)
+
+#define RCT_PROFILE_BEGIN_EVENT(...)
+#define RCT_PROFILE_END_EVENT(...)
 
 #define RCTProfileBeginAsyncEvent(...) 0
 #define RCTProfileEndAsyncEvent(...)
