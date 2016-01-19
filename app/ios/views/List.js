@@ -3,13 +3,10 @@
 var React = require('react-native');
 var PRE_LIST_URL = "http://m.yergoo.com/api/news/app/lists/";
 var LISTS_KEY = "toutiao-kailuo99-";
-
-var RefreshableListView = require('react-native-refreshable-listview');
 var Li = require('./Li');
 
 var {
   AppRegistry,
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -18,7 +15,9 @@ var {
   AsyncStorage,
   Navigator,
   AlertIOS,
+  RefreshControl,
   Alert,
+  ListView,
   AppStateIOS
 } = React;
 var ds = new ListView.DataSource({
@@ -34,23 +33,17 @@ var List = React.createClass({
           datas:null,
           loaded:false,
           isFetchMaxId:0, //正在拉取的当前的数据的最大ID
+          isRefreshing: false,
       };
   },
   componentDidMount: function() {
       if(this.state.datas == null) {
           this._loadinitData();
       }
-      AppStateIOS.addEventListener('change', this._handleAppStateChange);
+
   },
   componentWillUnmount: function() {
     AppStateIOS.removeEventListener('change');
-  },
-  _handleAppStateChange(currentAppState) {
-      if(currentAppState == 'active') {
-
-      } else if (currentAppState == 'background') {
-
-      }
   },
 
   // 异步加载数据
@@ -152,23 +145,13 @@ var List = React.createClass({
       );
   },
   _reloadLists: function() {
-      this.getData('top');
+      this.setState({isRefreshing: true});
+      setTimeout(() => {
+        this.getData('top');
+        this.setState({isRefreshing: false});
+      }, 1000);
   },
-  renderHeaderWrapper: function(refreshingIndicator) {
-    if(refreshingIndicator) {
-        return (
-          <View>
-            {refreshingIndicator}
-          </View>
-        );
-    } else {
-        return (
-          <View style={{height:25,alignItems:'center',flexDirection:'row'}}>
-              <Text style={{fontSize:12,color:'#999',textAlign:'center',flex:1}}>下拉加载最新...</Text>
-          </View>
-        );
-    }
-  },
+  
   renderFooter: function() {
     return (
         <View style={{flex:1, height:40,alignItems:'center',justifyContent:'center'}}>
@@ -198,31 +181,30 @@ var List = React.createClass({
       } else {
         return (
           <View style={{flex: 1,marginTop:64,}} >
-            <RefreshableListView style={{flex:1,overflow: 'hidden',marginBottom:50}}
+            <ListView style={{flex:1,overflow: 'hidden',marginBottom:50}}
               initialListSize={6}
               pageSize={1}
               scrollRenderAheadDistance={200}
               removeClippedSubviews={true}
               dataSource={ds.cloneWithRowsAndSections(this.state.datas.lists)} // 渲染的数据聚合
               renderRow={this._renderList}  // 单一条数模板
-              loadData={this._reloadLists}
               minPulldownDistance={30}   // 最新下拉长度
-              renderHeaderWrapper={this.renderHeaderWrapper}
               renderFooter={this.renderFooter}
               onEndReached={this.onEndReached}
-               />
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this._reloadLists}
+                  tintColor="#fff"
+                  title="正在拉取数据..."
+                />
+              }
+            />
           </View>
         );
       }
-  }
-});
-
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems:'center',
-    justifyContent:'center',
   },
+
 });
 
 module.exports = List;

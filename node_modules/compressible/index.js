@@ -35,7 +35,7 @@ module.exports = compressible
  *
  * @param {string} type
  * @return {Boolean} compressible
- & @public
+ * @public
  */
 
 function compressible(type) {
