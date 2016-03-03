@@ -9,21 +9,25 @@
 'use strict';
 
 var babel = require('babel-core');
-var Transforms = require('../transforms');
+var makeInternalConfig = require('babel-preset-react-native/configs/internal');
 
 // Runs internal transforms on the given sourceCode. Note that internal
 // transforms should be run after the external ones to ensure that they run on
 // Javascript code
 function internalTransforms(sourceCode, filename, options) {
-  var result = babel.transform(sourceCode, {
-    retainLines: true,
-    compact: true,
-    comments: false,
+  var internalBabelConfig = makeInternalConfig(options);
+
+  if (!internalBabelConfig) {
+    return {
+      code: sourceCode,
+      filename: filename,
+    };
+  }
+
+  var result = babel.transform(sourceCode, Object.assign({
     filename: filename,
     sourceFileName: filename,
-    sourceMaps: false,
-    plugins: Transforms.getAll()
-  });
+  }, internalBabelConfig));
 
   return {
     code: result.code,
@@ -37,16 +41,11 @@ function onExternalTransformDone(data, callback, error, externalOutput) {
     return;
   }
 
-  var result;
-  if (data.options.enableInternalTransforms) {
-    result = internalTransforms(
-      externalOutput.code,
-      externalOutput.filename,
-      data.options
-    );
-  } else {
-    result = externalOutput;
-  }
+  var result = internalTransforms(
+    externalOutput.code,
+    externalOutput.filename,
+    data.options
+  );
 
   callback(null, result);
 }

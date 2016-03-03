@@ -1,6 +1,6 @@
 # fancy-log
 
-[![Travis Build Status](https://img.shields.io/travis/phated/fancy-log.svg?branch=master&label=travis&style=flat-square)](https://travis-ci.org/phated/fancy-log)
+[![Travis Build Status](https://img.shields.io/travis/js-cli/fancy-log.svg?branch=master&label=travis&style=flat-square)](https://travis-ci.org/js-cli/fancy-log)
 
 Log things, prefixed with a timestamp
 

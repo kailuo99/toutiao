@@ -4,11 +4,11 @@
 
 [![saucelabs][saucelabs-image]][saucelabs-url]
 
-[travis-image]: https://img.shields.io/travis/feross/is-buffer/master.svg?style=flat
+[travis-image]: https://img.shields.io/travis/feross/is-buffer/master.svg
 [travis-url]: https://travis-ci.org/feross/is-buffer
-[npm-image]: https://img.shields.io/npm/v/is-buffer.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/is-buffer.svg
 [npm-url]: https://npmjs.org/package/is-buffer
-[downloads-image]: https://img.shields.io/npm/dm/is-buffer.svg?style=flat
+[downloads-image]: https://img.shields.io/npm/dm/is-buffer.svg
 [saucelabs-image]: https://saucelabs.com/browser-matrix/is-buffer.svg
 [saucelabs-url]: https://saucelabs.com/u/is-buffer
 

@@ -1,4 +1,5 @@
 'use strict';
+var arrayFindIndex = require('array-find-index');
 
 // WARNING: This undocumented API is subject to change.
 
@@ -10,9 +11,9 @@ module.exports = function (process) {
 	});
 
 	process.on('rejectionHandled', function (p) {
-		var index = unhandledRejections.reduce(function (result, item, idx) {
-			return (item.promise === p ? idx : result);
-		}, -1);
+		var index = arrayFindIndex(unhandledRejections, function (x) {
+			return x.promise === p;
+		});
 
 		unhandledRejections.splice(index, 1);
 	});

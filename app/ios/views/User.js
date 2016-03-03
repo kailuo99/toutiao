@@ -12,7 +12,6 @@ var {
   Navigator,
   ScrollView,
   PixelRatio,
-  AlertIOS,
   TouchableOpacity,
 } = React;
 
@@ -20,19 +19,7 @@ var {
 var Nav = {
 
   LeftButton: function(route, navigator, index, navState) {
-    // if(route.idx != 'user') {
-    //     return (
-    //       <TouchableOpacity
-    //         onPress={() => navigator.pop()}
-    //         >
-    //         <Text style={[styles.navBarText, styles.navBarButtonText]}>
-    //           返回
-    //         </Text>
-    //       </TouchableOpacity>
-    //     );
-    // } else {
-        return null;
-    // }
+    return null;
   },
 
   RightButton: function(route, navigator, index, navState) {
@@ -97,7 +84,7 @@ var User = React.createClass({
     render: function() {
         return (
             <Navigator
-              style={{flex:1}} 
+              style={{flex:1}}
               initialRoute={{idx:'starList',name:'我的收藏'}}
               renderScene={this._renderScene}
               sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的北京颜色

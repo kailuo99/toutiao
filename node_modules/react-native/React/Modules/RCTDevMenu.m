@@ -267,7 +267,7 @@ RCT_EXPORT_MODULE()
   self.shakeToShow = [_settings[@"shakeToShow"] ?: @YES boolValue];
   self.profilingEnabled = [_settings[@"profilingEnabled"] ?: @NO boolValue];
   self.liveReloadEnabled = [_settings[@"liveReloadEnabled"] ?: @NO boolValue];
-  self.hotLoadingEnabled = [_settings[@"hotLoadingEnabled"] ?: @YES boolValue];
+  self.hotLoadingEnabled = [_settings[@"hotLoadingEnabled"] ?: @NO boolValue];
   self.showFPS = [_settings[@"showFPS"] ?: @NO boolValue];
   self.executorClass = NSClassFromString(_executorOverride ?: _settings[@"executorClass"]);
 }
@@ -544,7 +544,7 @@ RCT_EXPORT_METHOD(reload)
   BOOL actuallyEnabled = [self hotLoadingAvailable] && _hotLoadingEnabled;
   if (RCTGetURLQueryParam(_bridge.bundleURL, @"hot").boolValue != actuallyEnabled) {
     _bridge.bundleURL = RCTURLByReplacingQueryParam(_bridge.bundleURL, @"hot",
-                                                    actuallyEnabled ? @"true" : @"false");
+                                                    actuallyEnabled ? @"true" : nil);
     [_bridge reload];
   }
 }

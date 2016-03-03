@@ -44,6 +44,12 @@ Optionally pass `replacer` and `space` as the last two arguments, as defined by 
 
 Default value for `space` is `2`, when not specified.
 
+### `#extendJSON(filepath, contents[, replacer [, space]])`
+
+Extend the content of an existing JSON file with the partial objects provided as argument.
+
+Optionally take the same JSON formatting arguments than `#writeJSON()`.
+
 ### `#delete(filepath, [options])`
 
 Delete a file or a directory.

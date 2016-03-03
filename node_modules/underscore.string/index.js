@@ -1,9 +1,12 @@
-//  Underscore.string
-//  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
-//  Underscore.string is freely distributable under the terms of the MIT license.
-//  Documentation: https://github.com/epeli/underscore.string
-//  Some code is borrowed from MooTools and Alexandru Marasteanu.
-//  Version '3.2.3'
+/*
+* Underscore.string
+* (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
+* Underscore.string is freely distributable under the terms of the MIT license.
+* Documentation: https://github.com/epeli/underscore.string
+* Some code is borrowed from MooTools and Alexandru Marasteanu.
+* Version '3.3.4'
+* @preserve
+*/
 
 'use strict';
 
@@ -13,7 +16,7 @@ function s(value) {
   this._wrapped = value;
 }
 
-s.VERSION = '3.2.3';
+s.VERSION = '3.3.4';
 
 s.isBlank          = require('./isBlank');
 s.stripTags        = require('./stripTags');
@@ -100,7 +103,7 @@ s.prototype = {
 };
 
 function fn2method(key, fn) {
-  if (typeof fn !== "function") return;
+  if (typeof fn !== 'function') return;
   s.prototype[key] = function() {
     var args = [this._wrapped].concat(Array.prototype.slice.call(arguments));
     var res = fn.apply(null, args);
@@ -112,7 +115,7 @@ function fn2method(key, fn) {
 // Copy functions to instance methods for chaining
 for (var key in s) fn2method(key, s[key]);
 
-fn2method("tap", function tap(string, fn) {
+fn2method('tap', function tap(string, fn) {
   return fn(string);
 });
 
@@ -124,14 +127,14 @@ function prototype2method(methodName) {
 }
 
 var prototypeMethods = [
-    "toUpperCase",
-    "toLowerCase",
-    "split",
-    "replace",
-    "slice",
-    "substring",
-    "substr",
-    "concat"
+  'toUpperCase',
+  'toLowerCase',
+  'split',
+  'replace',
+  'slice',
+  'substring',
+  'substr',
+  'concat'
 ];
 
 for (var method in prototypeMethods) prototype2method(prototypeMethods[method]);

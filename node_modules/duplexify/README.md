@@ -91,3 +91,7 @@ req.pipe(process.stdout)
 ## License
 
 MIT
+
+## Related
+
+`duplexify` is part of the [mississippi stream utility collection](https://github.com/maxogden/mississippi) which includes more useful stream modules similar to this one.

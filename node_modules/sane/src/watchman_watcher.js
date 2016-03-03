@@ -135,7 +135,7 @@ WatchmanWatcher.prototype.init = function() {
       if (self.globs.length === 0) {
         if (!self.dot) {
           // Make sure we honor the dot option if even we're not using globs.
-          options.expression = ['match', '*', 'basename', {
+          options.expression = ['match', '**', 'wholename', {
             includedotfiles: false
           }];
         }

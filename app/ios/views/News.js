@@ -13,7 +13,6 @@ var {
   Navigator,
   TouchableOpacity,
   AsyncStorage,
-  AlertIOS,
 } = React;
 
 

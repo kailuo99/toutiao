@@ -3,10 +3,10 @@
   Initial code from https://github.com/gulpjs/gulp-util/blob/v3.0.6/lib/log.js
  */
 var chalk = require('chalk');
-var dateformat = require('dateformat');
+var timestamp = require('time-stamp');
 
 function getTimestamp(){
-  return '['+chalk.grey(dateformat(new Date(), 'HH:MM:ss'))+']';
+  return '['+chalk.grey(timestamp('HH:mm:ss'))+']';
 }
 
 function log(){

@@ -7,7 +7,6 @@ var {
   Text,
   ActivityIndicatorIOS,
   WebView,
-  AlertIOS,
   TouchableOpacity,
   PixelRatio,
   Dimensions
@@ -31,6 +30,7 @@ var Detail = React.createClass({
         //       ];
         // }
 
+
     },
     componentWillUnmount: function() {
         // if(this.props.from == 'news') {
@@ -42,10 +42,18 @@ var Detail = React.createClass({
         <View style={{flex:1}}>
             <View style={styles.content}>
               <WebView
-              url={"http://m.yergoo.com/api/news/app/" + this.props.id}
-              automaticallyAdjustContentInset={false}              scalesPageToFit={true}
+              source={{uri: "http://m.yergoo.com/api/news/app/" + this.props.id}}
+              automaticallyAdjustContentInset={false}
               contentInset={{top:20,left:0,bottom:20,right:0}}
               startInLoadingState={true}
+              // android
+              domStorageEnabled={true}
+              javaScriptEnabled={true}
+              //ios
+              bounces={true}
+              allowsInlineMediaPlayback={true}
+              scrollEnabled={true}
+              decelerationRate="normal"
               />
             </View>
         </View>

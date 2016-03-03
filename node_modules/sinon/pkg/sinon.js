@@ -1,5 +1,5 @@
 /**
- * Sinon.JS 1.17.2, 2015/10/21
+ * Sinon.JS 1.17.3, 2016/01/27
  *
  * @author Christian Johansen (christian@cjohansen.no)
  * @author Contributors: https://github.com/cjohansen/Sinon.JS/blob/master/AUTHORS
@@ -726,7 +726,7 @@
         var ms = 0, parsed;
 
         if (l > 3 || !/^(\d\d:){0,2}\d\d?$/.test(str)) {
-            throw new Error("tick only understands numbers and 'h:m:s'");
+            throw new Error("tick only understands numbers, 'm:s' and 'h:m:s'. Each part must be two digits");
         }
 
         while (i--) {
@@ -896,6 +896,22 @@
                 isInRange = inRange(from, to, timers[id]);
 
                 if (isInRange && (!timer || compareTimers(timer, timers[id]) === 1)) {
+                    timer = timers[id];
+                }
+            }
+        }
+
+        return timer;
+    }
+
+    function firstTimer(clock) {
+        var timers = clock.timers,
+            timer = null,
+            id;
+
+        for (id in timers) {
+            if (timers.hasOwnProperty(id)) {
+                if (!timer || compareTimers(timer, timers[id]) === 1) {
                     timer = timers[id];
                 }
             }
@@ -1127,6 +1143,22 @@
             }
 
             return clock.now;
+        };
+
+        clock.next = function next() {
+            var timer = firstTimer(clock);
+            if (!timer) {
+                return clock.now;
+            }
+
+            clock.duringTick = true;
+            try {
+                clock.now = timer.callAt;
+                callTimer(clock, timer);
+                return clock.now;
+            } finally {
+                clock.duringTick = false;
+            }
         };
 
         clock.reset = function reset() {
@@ -2369,8 +2401,12 @@ var sinon = (function () {
             },
 
             toString: function () {
-                var callStr = this.proxy.toString() + "(";
+                var callStr = this.proxy ? this.proxy.toString() + "(" : "";
                 var args = [];
+
+                if (!this.args) {
+                    return ":(";
+                }
 
                 for (var i = 0, l = this.args.length; i < l; ++i) {
                     args.push(sinon.format(this.args[i]));
@@ -4502,8 +4538,23 @@ if (typeof sinon === "undefined") {
 /**
  * Fake XDomainRequest object
  */
+
+/**
+ * Returns the global to prevent assigning values to 'this' when this is undefined.
+ * This can occur when files are interpreted by node in strict mode.
+ * @private
+ */
+function getGlobal() {
+    
+    return typeof window !== "undefined" ? window : global;
+}
+
 if (typeof sinon === "undefined") {
-    this.sinon = {};
+    if (typeof this === "undefined") {
+        getGlobal().sinon = {};
+    } else {
+        this.sinon = {};
+    }
 }
 
 // wrapper for global

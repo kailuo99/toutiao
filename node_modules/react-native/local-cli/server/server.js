@@ -31,6 +31,10 @@ function _server(argv, config, resolve, reject) {
     default: 8081,
     type: 'string',
   }, {
+    command: 'host',
+    default: '',
+    type: 'string',
+  }, {
     command: 'root',
     type: 'string',
     description: 'add another root(s) to be used by the packager in this project',
@@ -53,10 +57,6 @@ function _server(argv, config, resolve, reject) {
     type: 'string',
     default: require.resolve('../../packager/transformer'),
     description: 'Specify a custom transformer to be used (absolute path)'
-  }, {
-    command: 'enable-internal-transforms',
-    type: 'boolean',
-    default: false
   }, {
     command: 'resetCache',
     description: 'Removes cached files',

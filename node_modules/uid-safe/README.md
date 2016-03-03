@@ -44,7 +44,8 @@ uid(18, function (err, string) {
 Asynchronously create a UID with a specific byte length and return a
 `Promise`.
 
-**To use promises, you must define a global `Promise` if necessary.**
+**Note**: To use promises in Node.js _prior to 0.12_, promises must be
+"polyfilled" using `global.Promise = require('bluebird')`.
 
 ```js
 uid(18).then(function (string) {

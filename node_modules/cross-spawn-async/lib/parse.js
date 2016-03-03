@@ -23,6 +23,7 @@ function readShebang(command) {
     try {
         fd = fs.openSync(command, 'r');
         fs.readSync(fd, buffer, 0, 150, 0);
+        fs.closeSync(fd);
     } catch (e) {}
 
     // Check if it is a shebang

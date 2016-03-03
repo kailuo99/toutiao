@@ -8,7 +8,6 @@ var {
   Component,
   ScrollView,
   TouchableOpacity,
-  AlertIOS,
   AsyncStorage,
 } = React;
 
@@ -32,7 +31,7 @@ class StarList extends React.Component {
                         {
                             this.props.starDatas.map((data)=>{
                                 return (
-                                    <TouchableOpacity onPress={()=>{
+                                    <TouchableOpacity key={data.id} onPress={()=>{
                                         this.props.pnav.push({sence:'detail', id:data.id, title:data.title,isStar:true});
                                     }}>
                                         <View style={styles.li}>

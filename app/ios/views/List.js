@@ -14,12 +14,13 @@ var {
   ListView,
   AsyncStorage,
   Navigator,
-  AlertIOS,
+  Alert,
   RefreshControl,
   Alert,
   ListView,
-  AppStateIOS
+  AppState
 } = React;
+
 var ds = new ListView.DataSource({
     rowHasChanged: (r1, r2) => r1 !== r2,
     sectionHeaderHasChanged: (s1, s2) => s1 !== s2
@@ -37,13 +38,13 @@ var List = React.createClass({
       };
   },
   componentDidMount: function() {
-      if(this.state.datas == null) {
+      if(!this.state.loaded) {
           this._loadinitData();
       }
 
   },
   componentWillUnmount: function() {
-    AppStateIOS.removeEventListener('change');
+    AppState.removeEventListener('change');
   },
 
   // 异步加载数据
@@ -108,7 +109,7 @@ var List = React.createClass({
                 });
                 AsyncStorage.setItem(LISTS_KEY + this.props.route.sign, JSON.stringify(tmp)).done();
             } else {
-                AlertIOS.alert('暂无最新，请稍等片刻！');
+                Alert.alert('暂无最新，请稍等片刻！');
             }
           }
          )
@@ -140,7 +141,7 @@ var List = React.createClass({
   _renderList: function(data,sectionID,rowID) {
       return (
         <TouchableOpacity activeOpacity={0.5} key={data.resource.id} onPress={()=>this.navHandleChange(data.resource)}>
-          <Li data={data.resource} key={data.resource.id} />
+          <Li data={data.resource} />
         </TouchableOpacity>
       );
   },
@@ -151,7 +152,7 @@ var List = React.createClass({
         this.setState({isRefreshing: false});
       }, 1000);
   },
-  
+
   renderFooter: function() {
     return (
         <View style={{flex:1, height:40,alignItems:'center',justifyContent:'center'}}>

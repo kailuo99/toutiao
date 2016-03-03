@@ -367,10 +367,18 @@ function harness(mode) {
         assert.equal(dir, testdir);
         done();
       });
+
+      this.watcher.on('add', function(filepath, dir) {
+        if (filepath.match(/^\.lol/)) {
+          done(new Error('Should not emit add events for ignored dirs'));
+        }
+      });
+
       this.watcher.on('ready', function() {
-        fs.mkdirSync(jo(testdir, '.lol'));
-        fs.writeFileSync(jo(testdir, '.lol', 'file'), 'wow');
-        fs.writeFileSync(jo(testdir, '.file_3'), 'wow');
+        var subdir = jo(testdir, '.lol' + Math.floor(Math.random() * 10000));
+        fs.mkdirSync(subdir);
+        fs.writeFileSync(jo(subdir, 'file'), 'wow');
+        fs.writeFileSync(jo(subdir, '.file_3'), 'wow');
         fs.writeFileSync(jo(testdir, 'file_1'), 'wow');
       });
     });

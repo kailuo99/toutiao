@@ -17,19 +17,18 @@ var Touchable = require('Touchable');
 var TouchableWithoutFeedback = require('TouchableWithoutFeedback');
 var UIManager = require('UIManager');
 
-var createStrictShapeTypeChecker = require('createStrictShapeTypeChecker');
 var ensurePositiveDelayProps = require('ensurePositiveDelayProps');
 var onlyChild = require('onlyChild');
 var processColor = require('processColor');
 var requireNativeComponent = require('requireNativeComponent');
 
-var rippleBackgroundPropType = createStrictShapeTypeChecker({
+var rippleBackgroundPropType = PropTypes.shape({
   type: React.PropTypes.oneOf(['RippleAndroid']),
   color: PropTypes.number,
   borderless: PropTypes.bool,
 });
 
-var themeAttributeBackgroundPropType = createStrictShapeTypeChecker({
+var themeAttributeBackgroundPropType = PropTypes.shape({
   type: React.PropTypes.oneOf(['ThemeAttrAndroid']),
   attribute: PropTypes.string.isRequired,
 });
@@ -142,7 +141,7 @@ var TouchableNativeFeedback = React.createClass({
   touchableHandleActivePressIn: function() {
     this.props.onPressIn && this.props.onPressIn();
     this._dispatchPressedStateChange(true);
-    this._dispatchHotspotUpdate(this.pressInLocation.pageX, this.pressInLocation.pageY);
+    this._dispatchHotspotUpdate(this.pressInLocation.locationX, this.pressInLocation.locationY);
   },
 
   touchableHandleActivePressOut: function() {
@@ -201,6 +200,7 @@ var TouchableNativeFeedback = React.createClass({
       ...onlyChild(this.props.children).props,
       nativeBackgroundAndroid: this.props.background,
       accessible: this.props.accessible !== false,
+      accessibilityLabel: this.props.accessibilityLabel,
       accessibilityComponentType: this.props.accessibilityComponentType,
       accessibilityTraits: this.props.accessibilityTraits,
       testID: this.props.testID,

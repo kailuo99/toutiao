@@ -3,10 +3,11 @@
 node.js through stream that emits a unique stream of objects based on criteria
 
 [![Build Status](https://travis-ci.org/eugeneware/unique-stream.svg?branch=master)](https://travis-ci.org/eugeneware/unique-stream)
+[![Coverage Status](https://coveralls.io/repos/eugeneware/unique-stream/badge.svg?branch=master&service=github)](https://coveralls.io/github/eugeneware/unique-stream?branch=master)
 
 ## Installation
 
-Install via npm:
+Install via [npm](https://www.npmjs.com/):
 
 ```
 $ npm install unique-stream

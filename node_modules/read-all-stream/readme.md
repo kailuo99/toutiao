@@ -4,7 +4,7 @@
 
 ## Install
 
-```sh
+```
 $ npm install --save read-all-stream
 ```
 
@@ -69,4 +69,4 @@ The data in stream.
 MIT © [Vsevolod Strukchinsky](floatdrop@gmail.com)
 
 [travis-url]: https://travis-ci.org/floatdrop/read-all-stream
-[travis-image]: http://img.shields.io/travis/floatdrop/read-all-stream.svg?style=flat
+[travis-image]: https://img.shields.io/travis/floatdrop/read-all-stream.svg

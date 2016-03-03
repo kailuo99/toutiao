@@ -107,9 +107,9 @@ filter(S.startsWith('.'), [
 ```
 
 ## Download
-
-  * [Development version](https://raw.github.com/epeli/underscore.string/master/dist/underscore.string.js) *Uncompressed with Comments*
-  * [Production version](https://github.com/epeli/underscore.string/raw/master/dist/underscore.string.min.js) *Minified*
+  
+  * [Development version](https://npmcdn.com/underscore.string/dist/underscore.string.js) *Uncompressed with Comments*
+  * [Production version](https://npmcdn.com/underscore.string/dist/underscore.string.min.js) *Minified*
 
 ## API
 
@@ -530,11 +530,9 @@ words("   ")
 
 #### sprintf(string format, ...arguments) => string
 
-C like string formatting.
-Credits goes to [Alexandru Marasteanu][o].
-For more detailed documentation, see the [original page][o].
+C like string formatting. Makes use of the [sprintf-js](https://npmjs.org/package/sprintf-js) package.
 
-[o]: http://www.diveintojavascript.com/projects/javascript-sprintf
+**This function will be removed in the next major release, use the [sprintf-js](https://npmjs.org/package/sprintf-js) package instead.**
 
 ```javascript
 sprintf("%.1f", 1.17);

@@ -29,6 +29,10 @@ var PRESS_RETENTION_OFFSET = {top: 20, left: 20, right: 20, bottom: 30};
  * Do not use unless you have a very good reason. All the elements that
  * respond to press should have a visual feedback when touched. This is
  * one of the primary reason a "web" app doesn't feel "native".
+ * 
+ * > **NOTE**: TouchableWithoutFeedback supports only one child
+ * >
+ * > If you wish to have several child components, wrap them in a View.
  */
 var TouchableWithoutFeedback = React.createClass({
   mixins: [TimerMixin, Touchable.Mixin],
@@ -131,6 +135,7 @@ var TouchableWithoutFeedback = React.createClass({
     // Note(avik): remove dynamic typecast once Flow has been upgraded
     return (React: any).cloneElement(onlyChild(this.props.children), {
       accessible: this.props.accessible !== false,
+      accessibilityLabel: this.props.accessibilityLabel,
       accessibilityComponentType: this.props.accessibilityComponentType,
       accessibilityTraits: this.props.accessibilityTraits,
       testID: this.props.testID,

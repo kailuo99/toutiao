@@ -8,7 +8,6 @@ var {
   View, // 类似于DIV
   Image,
   PixelRatio,
-  AlertIOS,
 } = React;
 
 

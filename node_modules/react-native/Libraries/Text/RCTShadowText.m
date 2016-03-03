@@ -213,8 +213,6 @@ static css_dim_t RCTMeasure(void *context, float width, float height)
         NSTextAttachment *imageAttachment = [NSTextAttachment new];
         imageAttachment.image = image;
         [attributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:imageAttachment]];
-      } else {
-        //TODO: add placeholder image?
       }
     } else {
       RCTLogError(@"<Text> can't have any children except <Text>, <Image> or raw strings");
@@ -373,7 +371,6 @@ RCT_TEXT_PROPERTY(IsHighlighted, _isHighlighted, BOOL)
 RCT_TEXT_PROPERTY(LetterSpacing, _letterSpacing, CGFloat)
 RCT_TEXT_PROPERTY(LineHeight, _lineHeight, CGFloat)
 RCT_TEXT_PROPERTY(NumberOfLines, _numberOfLines, NSUInteger)
-RCT_TEXT_PROPERTY(ShadowOffset, _shadowOffset, CGSize)
 RCT_TEXT_PROPERTY(TextAlign, _textAlign, NSTextAlignment)
 RCT_TEXT_PROPERTY(TextDecorationColor, _textDecorationColor, UIColor *);
 RCT_TEXT_PROPERTY(TextDecorationLine, _textDecorationLine, RCTTextDecorationLineType);

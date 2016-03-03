@@ -85,6 +85,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_VIEW_PROPERTY(showsUserLocation, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(showsPointsOfInterest, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(showsCompass, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(followUserLocation, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(zoomEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(rotateEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(pitchEnabled, BOOL)
@@ -96,6 +97,8 @@ RCT_EXPORT_VIEW_PROPERTY(mapType, MKMapType)
 RCT_EXPORT_VIEW_PROPERTY(annotations, NSArray<RCTMapAnnotation *>)
 RCT_EXPORT_VIEW_PROPERTY(overlays, NSArray<RCTMapOverlay *>)
 RCT_EXPORT_VIEW_PROPERTY(onAnnotationDragStateChange, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onAnnotationFocus, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onAnnotationBlur, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock)
 RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
@@ -136,6 +139,7 @@ RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
 
 - (void)mapView:(RCTMap *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
+  // TODO: Remove deprecated onAnnotationPress API call later.
   if (mapView.onPress && [view.annotation isKindOfClass:[RCTMapAnnotation class]]) {
     RCTMapAnnotation *annotation = (RCTMapAnnotation *)view.annotation;
     mapView.onPress(@{
@@ -148,6 +152,27 @@ RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
         @"longitude": @(annotation.coordinate.longitude)
       }
     });
+  }
+
+  if ([view.annotation isKindOfClass:[RCTMapAnnotation class]]) {
+    RCTMapAnnotation *annotation = (RCTMapAnnotation *)view.annotation;
+    if (mapView.onAnnotationFocus) {
+      mapView.onAnnotationFocus(@{
+        @"annotationId": annotation.identifier
+      });
+    }
+  }
+}
+
+- (void)mapView:(RCTMap *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
+{
+  if ([view.annotation isKindOfClass:[RCTMapAnnotation class]]) {
+    RCTMapAnnotation *annotation = (RCTMapAnnotation *)view.annotation;
+    if (mapView.onAnnotationBlur) {
+      mapView.onAnnotationBlur(@{
+        @"annotationId": annotation.identifier
+      });
+    }
   }
 }
 
@@ -320,9 +345,6 @@ RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
     region.span.longitudeDelta = RCTMapDefaultSpan;
     region.center = location.coordinate;
     [mapView setRegion:region animated:YES];
-
-    // Move to user location only for the first time it loads up.
-    mapView.followUserLocation = NO;
   }
 }
 

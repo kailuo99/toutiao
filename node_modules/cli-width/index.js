@@ -5,13 +5,13 @@ exports.defaultWidth = 0;
 
 function cliWidth() {
   if (process.stdout.getWindowSize) {
-    return process.stdout.getWindowSize()[0];
+    return process.stdout.getWindowSize()[0] || exports.defaultWidth;
   }
   else {
     var tty = require('tty');
 
     if (tty.getWindowSize) {
-      return tty.getWindowSize()[1];
+      return tty.getWindowSize()[1] || exports.defaultWidth;
     }
     else {
       if (process.env.CLI_WIDTH) {

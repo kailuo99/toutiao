@@ -1,6 +1,6 @@
 var stream = require('readable-stream')
 var eos = require('end-of-stream')
-var util = require('util')
+var inherits = require('inherits')
 
 var SIGNAL_FLUSH = new Buffer([0])
 
@@ -52,7 +52,7 @@ var Duplexify = function(writable, readable, opts) {
   if (readable) this.setReadable(readable)
 }
 
-util.inherits(Duplexify, stream.Duplex)
+inherits(Duplexify, stream.Duplex)
 
 Duplexify.obj = function(writable, readable, opts) {
   if (!opts) opts = {}
