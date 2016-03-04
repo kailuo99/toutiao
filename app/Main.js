@@ -31,7 +31,8 @@ export default class Main extends React.Component {
   componentDidMount() {
       // 异步获取
       this._initGetData();
-      Statistic.Run();
+      var x = new Statistic();
+      x.Run();
   }
   // 初始化执行
   async _initGetData() {

@@ -1,13 +1,10 @@
 'use strict';
 
-var React = require('react-native');
-var DeviceInfo = require('react-native-device-info');
-
-var {
-    Component,
+import React, {
     AsyncStorage,
     NetInfo,
-} = React;
+} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 
 var DEVICE_KEY = "toutiao-device-";
 var PRE_LIST_URL = "http://m.yergoo.com/api/news/app/statistics/";
@@ -32,11 +29,10 @@ Date.prototype.Format = function(fmt) {
     return fmt;
 }
 
-
 //
-var Statistic = {
+export default class Statistic {
     // 安装后执行一次
-    Run: function() {
+    Run() {
         this._getDeviceInfo();
         // 判断是否联网
         NetInfo.isConnected.fetch().done((isConnected) => {
@@ -59,7 +55,7 @@ var Statistic = {
                 );
             }
         }
-    },
+    }
     // 获取设备信息
     async _getDeviceInfo() {
             // 收集数据，本地存储
@@ -89,7 +85,7 @@ var Statistic = {
                   },
                 );
             }
-    },
+    }
     //
     async _fetchData() {
 
@@ -149,5 +145,3 @@ var Statistic = {
     }
 
 }
-
-module.exports = Statistic;

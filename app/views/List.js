@@ -186,7 +186,7 @@ export default class List extends React.Component{
             <ListView style={{flex:1,overflow: 'hidden',marginBottom:50}}
               initialListSize={6}
               pageSize={1}
-              scrollRenderAheadDistance={200}
+              scrollRenderAheadDistance={100}
               removeClippedSubviews={true}
               dataSource={ds.cloneWithRowsAndSections(this.state.datas.lists)} // 渲染的数据聚合
               renderRow={this._renderList}  // 单一条数模板
