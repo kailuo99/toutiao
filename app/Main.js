@@ -21,7 +21,7 @@ export default class Main extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-        hideNavBar:true,
+        hideNavBar: true,
         starDatas: null,
       };
       this._renderScene = this._renderScene.bind(this);

@@ -1,15 +1,16 @@
 'use strict';
 
-var React = require('react-native');
-var Icon = require('react-native-vector-icons/Ionicons');
-var News = require('./News');
-var User = require('./User');
-var {
+import React, {
   StyleSheet, // 样式
   PixelRatio,
-  TabBarIOS,
+  Alert,
   View,
-} = React;
+  Text
+} from 'react-native';
+
+import News from './News';
+import User from './User';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 var TabArr = [
     {
@@ -27,53 +28,34 @@ var TabArr = [
 ];
 
 
-var TabIndex = React.createClass({
-    getInitialState: function() {
-        return {
-            tabIndex:0,
-        };
-    },
+export default class TabIndex extends React.Component{
 
-    _renderScene: function() {
-        switch(this.state.tabIndex) {
-            case 0:
-                return <News pnav={this.props.pnav} starDatas={this.props.starDatas} />;
-                break;
-            case 1:
-                return <User pnav={this.props.pnav} starDatas={this.props.starDatas} />;
-                break;
-        }
-    },
+    constructor(props) {
+      super(props);
+      this.state = {
+         tabIndex:0,
+      };
+    }
 
-    render: function() {
+    // _renderScene() {
+    //     switch(this.state.tabIndex) {
+    //         case 0:
+    //             return <News pnav={this.props.pnav} starDatas={this.props.starDatas} />;
+    //             break;
+    //         case 1:
+    //             return <User pnav={this.props.pnav} starDatas={this.props.starDatas} />;
+    //             break;
+    //     }
+    // }
+
+    render() {
         return (
             <View style={styles.container}>
-                <TabBarIOS translucent={true} >
-                    {
-                        TabArr.map(
-                            (val)=>{
-                                return (
-                                    <Icon.TabBarItem
-                                      title={val.title}
-                                      selected={this.state.tabIndex === val.key}
-                                      iconName={val.icon}
-                                      key={val.key}
-                                      selectedIconName={val.selectedIcon}
-
-                                      onPress={() => {
-                                        this.setState({ tabIndex: val.key,});
-                                      }}>
-                                      {this._renderScene()}
-                                    </Icon.TabBarItem>
-                                );
-                            }
-                        )
-                    }
-                </TabBarIOS>
+                <Text>123</Text>
             </View>
         );
     }
-});
+};
 
 var styles = StyleSheet.create({
     container: {
@@ -81,5 +63,3 @@ var styles = StyleSheet.create({
       marginBottom:0
     },
 });
-
-module.exports = TabIndex;

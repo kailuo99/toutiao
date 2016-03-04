@@ -7,13 +7,13 @@ import React, {
   Text,
   View,
   TouchableOpacity,
-  ActivityIndicatorIOS,
   ListView,
   AsyncStorage,
   Navigator,
   Alert,
   RefreshControl,
-  AppState
+  AppState,
+  Platform
 } from 'react-native';
 
 import Li from './Li';
@@ -38,9 +38,9 @@ export default class List extends React.Component{
       this._reloadLists = this._reloadLists.bind(this);
   }
   componentDidMount() {
-      if(!this.state.loaded) {
-          this._loadinitData();
-      }
+      // if(!this.state.loaded) {
+      //     this._loadinitData();
+      // }
 
   }
   componentWillUnmount() {
@@ -173,13 +173,23 @@ export default class List extends React.Component{
   }
   render() {
       if(!this.state.loaded) {
-        return (
+        if(Platform.OS === 'ios') {
+            return (
               <View style={{flex:1}}>
                 <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
-                  <ActivityIndicatorIOS color = {'#d43d3d'} />
+                  <React.ActivityIndicatorIOS color = {'#d43d3d'} />
                 </View>
               </View>
           );
+        } else { // android
+          return (
+              <View style={{flex:1}}>
+                <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
+                  <React.progressBar color = {'#d43d3d'} />
+                </View>
+              </View>
+          );
+        }
       } else {
         return (
           <View style={{flex: 1,marginTop:64,}} >

@@ -10,8 +10,8 @@
 
 # 使用的组件
 
-1. 图标： oblador/react-native-vector-icons
-2. 获取设备信息：rebeccahughes/react-native-device-info
+1. 图标： [oblador/react-native-vector-icons](https://github.com/oblador/react-native-vector-icons)
+2. 获取设备信息：[rebeccahughes/react-native-device-info](https://github.com/rebeccahughes/react-native-device-info)
 
 # 使用方式
 

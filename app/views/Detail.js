@@ -4,7 +4,6 @@ import React, {
   StyleSheet,
   View, // 类似于DIV
   Text,
-  ActivityIndicatorIOS,
   WebView,
   TouchableOpacity,
   PixelRatio,
