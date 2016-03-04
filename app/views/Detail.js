@@ -1,7 +1,6 @@
 'use strict';
 
-var React = require('react-native');
-var {
+import React, {
   StyleSheet,
   View, // 类似于DIV
   Text,
@@ -10,34 +9,10 @@ var {
   TouchableOpacity,
   PixelRatio,
   Dimensions
-} = React;
+} from 'react-native';
 
-var Detail = React.createClass({
-    componentDidMount: function() {
-        // if(this.props.from == 'news') {
-        //     var navigator = this.props.navigator;
-        //     var callback = (event) => {
-        //          var route = event.data.route;
-        //           if(route.page=='lists') {
-        //
-        //              // console.log(this.props.route_stact.indexOf(route),navigator.getCurrentRoutes(),event.type);
-        //           }
-        //     };
-        //       // Observe focus change events from the owner.
-        //       this._listeners = [
-        //         // navigator.navigationContext.addListener('didfocus', callback),
-        //         // navigator.navigationContext.addListener('willfocus', callback),
-        //       ];
-        // }
-
-
-    },
-    componentWillUnmount: function() {
-        // if(this.props.from == 'news') {
-        //     this._listeners && this._listeners.forEach(listener => listener.remove());
-        // }
-    },
-  render: function() {
+export default class Detail extends React.Component{
+  render() {
     return (
         <View style={{flex:1}}>
             <View style={styles.content}>
@@ -59,7 +34,7 @@ var Detail = React.createClass({
         </View>
     );
   }
-});
+};
 
 var styles = StyleSheet.create({
   container: {
@@ -76,5 +51,3 @@ var styles = StyleSheet.create({
     borderWidth: 1/PixelRatio.get(),
   },
 });
-
-module.exports = Detail;

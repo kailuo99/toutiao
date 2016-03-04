@@ -1,12 +1,9 @@
 'use strict';
 
-var React = require('react-native');
 var PRE_LIST_URL = "http://m.yergoo.com/api/news/app/lists/";
 var LISTS_KEY = "toutiao-kailuo99-";
-var Li = require('./Li');
 
-var {
-  AppRegistry,
+import React, {
   Text,
   View,
   TouchableOpacity,
@@ -16,36 +13,39 @@ var {
   Navigator,
   Alert,
   RefreshControl,
-  Alert,
-  ListView,
   AppState
-} = React;
+} from 'react-native';
+
+import Li from './Li';
 
 var ds = new ListView.DataSource({
     rowHasChanged: (r1, r2) => r1 !== r2,
     sectionHeaderHasChanged: (s1, s2) => s1 !== s2
 });
 //
-var List = React.createClass({
-
-  getInitialState: function() {
-      return {
-          sign: null,
+export default class List extends React.Component{
+  constructor(props) {
+      super(props);
+      this.state = {
+         sign: null,
           datas:null,
           loaded:false,
           isFetchMaxId:0, //正在拉取的当前的数据的最大ID
           isRefreshing: false,
       };
-  },
-  componentDidMount: function() {
+      this._renderList=this._renderList.bind(this);
+      this.onEndReached = this.onEndReached.bind(this);
+      this._reloadLists = this._reloadLists.bind(this);
+  }
+  componentDidMount() {
       if(!this.state.loaded) {
           this._loadinitData();
       }
 
-  },
-  componentWillUnmount: function() {
+  }
+  componentWillUnmount() {
     AppState.removeEventListener('change');
-  },
+  }
 
   // 异步加载数据
   async _loadinitData() {
@@ -71,7 +71,7 @@ var List = React.createClass({
       } else {
           await this.getData('init');
       }
-  },
+  }
   // 获取数据
   async getData(pos) {
       if(!this.state.datas) {
@@ -109,14 +109,22 @@ var List = React.createClass({
                 });
                 AsyncStorage.setItem(LISTS_KEY + this.props.route.sign, JSON.stringify(tmp)).done();
             } else {
-                Alert.alert('暂无最新，请稍等片刻！');
+                // Alert.alert('暂无最新，请稍等片刻！');
             }
           }
          )
         .done();
-  },
+  }
+  
+  _renderList(data,sectionID,rowID) {
+      return (
+        <TouchableOpacity activeOpacity={0.5} key={data.resource.id} onPress={()=>this.navHandleChange(data.resource)}>
+          <Li data={data.resource} />
+        </TouchableOpacity>
+      );
+  }
   // 进入详情页
-  navHandleChange: function(data) {
+  navHandleChange(data) {
       if(this.props.starDatas != null) {
           for(var i = 0; i < this.props.starDatas.length; i++) {
               if(this.props.starDatas[i].id == data.id) {
@@ -137,31 +145,24 @@ var List = React.createClass({
           isStar: false,
           title: data.title,
       });
-  },
-  _renderList: function(data,sectionID,rowID) {
-      return (
-        <TouchableOpacity activeOpacity={0.5} key={data.resource.id} onPress={()=>this.navHandleChange(data.resource)}>
-          <Li data={data.resource} />
-        </TouchableOpacity>
-      );
-  },
-  _reloadLists: function() {
+  }
+  _reloadLists() {
       this.setState({isRefreshing: true});
       setTimeout(() => {
         this.getData('top');
         this.setState({isRefreshing: false});
       }, 1000);
-  },
+  }
 
-  renderFooter: function() {
+  renderFooter() {
     return (
         <View style={{flex:1, height:40,alignItems:'center',justifyContent:'center'}}>
           <ActivityIndicatorIOS color = {'#d43d3d'} />
         </View>
     );
-  },
+  }
   // 数据加载到底部时候拉取新数据
-  onEndReached: function() {
+  onEndReached() {
     // 防止多次重复加载
     if(this.state.isFetchMaxId != this.state.datas.max) {
         this.setState({
@@ -169,8 +170,8 @@ var List = React.createClass({
         });
         this.getData('bottom');
     }
-  },
-  render: function() {
+  }
+  render() {
       if(!this.state.loaded) {
         return (
               <View style={{flex:1}}>
@@ -204,8 +205,6 @@ var List = React.createClass({
           </View>
         );
       }
-  },
+  }
 
-});
-
-module.exports = List;
+};

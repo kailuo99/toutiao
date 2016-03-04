@@ -1,15 +1,15 @@
 'use strict';
 
-var React = require('react-native');
-var Icon = require('react-native-vector-icons/Ionicons');
-var News = require('./News');
-var User = require('./User');
-var {
+import React, {
   StyleSheet, // 样式
   PixelRatio,
   TabBarIOS,
-  View,
-} = React;
+  View
+} from 'react-native';
+
+import News from './News';
+import User from './User';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 var TabArr = [
     {
@@ -27,14 +27,16 @@ var TabArr = [
 ];
 
 
-var TabIndex = React.createClass({
-    getInitialState: function() {
-        return {
-            tabIndex:0,
-        };
-    },
+export default class TabIndex extends React.Component{
 
-    _renderScene: function() {
+    constructor(props) {
+      super(props);
+      this.state = {
+         tabIndex:0,
+      };
+    }
+
+    _renderScene() {
         switch(this.state.tabIndex) {
             case 0:
                 return <News pnav={this.props.pnav} starDatas={this.props.starDatas} />;
@@ -43,9 +45,9 @@ var TabIndex = React.createClass({
                 return <User pnav={this.props.pnav} starDatas={this.props.starDatas} />;
                 break;
         }
-    },
+    }
 
-    render: function() {
+    render() {
         return (
             <View style={styles.container}>
                 <TabBarIOS translucent={true} >
@@ -73,7 +75,7 @@ var TabIndex = React.createClass({
             </View>
         );
     }
-});
+};
 
 var styles = StyleSheet.create({
     container: {
@@ -81,5 +83,3 @@ var styles = StyleSheet.create({
       marginBottom:0
     },
 });
-
-module.exports = TabIndex;

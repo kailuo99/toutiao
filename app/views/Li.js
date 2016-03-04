@@ -1,19 +1,21 @@
 'use strict';
 
-var React = require('react-native');
-var Dimensions = require('Dimensions');
-var {
+import React, {
   StyleSheet, // 样式
   Text, // 文本
   View, // 类似于DIV
   Image,
   PixelRatio,
-} = React;
+} from 'react-native';
+
+import Dimensions from 'Dimensions';
 
 
-var Li = React.createClass({
-
-    render: function() {
+export default class Li extends React.Component{
+    constructor(props) {
+        super(props);
+    }
+    render() {
         if(this.props.data.images.length >=3) {
             return this.li3(this.props.data);
         } else if (this.props.data.images.length >=1) {
@@ -21,17 +23,18 @@ var Li = React.createClass({
         } else {
             return this.li0(this.props.data);
         }
-    },
+    }
 
-    li0: function(data) {
+    li0(data) {
         return (
             <View style={styles.list}>
                 <Text style={styles.listTitle}>{data.title}</Text>
                 <Text style={styles.listMute}>{data.source_public_time}    {data.source}</Text>
             </View>
         );
-    },
-    li1: function(data) {
+    }
+
+    li1(data) {
         return (
             <View style={styles.list}>
                 <View style={{flexDirection: 'row'}}>
@@ -43,8 +46,9 @@ var Li = React.createClass({
                 </View>
             </View>
         );
-    },
-    li3: function(data) {
+    }
+
+    li3(data) {
         return (
             <View style={styles.list}>
                 <Text style={styles.listTitle}>{data.title}</Text>
@@ -57,7 +61,7 @@ var Li = React.createClass({
             </View>
         );
     }
-});
+};
 
 var styles = StyleSheet.create({
 
@@ -91,5 +95,3 @@ var styles = StyleSheet.create({
   }
 
 });
-
-module.exports = Li;

@@ -1,21 +1,17 @@
 'use strict';
 
-var React = require('react-native');
-var List = require('./List');
-var Detail = require('./Detail');
-var Icon = require('react-native-vector-icons/Ionicons');
-
-var {
-  AppRegistry,
+import React, {
   StyleSheet,
   Text,
   View,
   Navigator,
   TouchableOpacity,
   AsyncStorage,
-} = React;
+} from 'react-native';
 
-
+import List from './List';
+import Detail from './Detail';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 var ROUTE_STACK = [
     {
@@ -106,30 +102,11 @@ var Nav = {
   },
 };
 
-var News = React.createClass({
+export default class News extends React.Component{
 
-  // _refFunc: function(navigator) {
-  //     var callback = (event) => {
-  //          var route = event.data.route;
-  //          // if(route.page == 'detail') {
-  //             // 这里写逻辑来加载收藏的路由
-  //             console.log(navigator.getCurrentRoutes(),route,event.type,'lists');
-  //          // }
-
-  //     };
-  //       // Observe focus change events from the owner.
-  //       this._listeners = [
-  //         navigator.navigationContext.addListener('didfocus', callback),
-  //         navigator.navigationContext.addListener('willfocus', callback),
-  //       ];
-  // } ,
-  // componentWillUnmount: function() {
-  //   //   this._listeners && this._listeners.forEach(listener => listener.remove());
-  // },
-  render: function() {
+  render() {
     return (
         <Navigator
-          ref={this._refFunc}
           style={styles.container} // 整体的背景颜色
           initialRoute={ROUTE_STACK[0]}
           initialRouteStack={ROUTE_STACK}
@@ -151,7 +128,7 @@ var News = React.createClass({
         />
     );
   }
-});
+};
 
 var styles = StyleSheet.create({
   container: {
@@ -188,5 +165,3 @@ var styles = StyleSheet.create({
     backgroundColor: '#EAEAEA',
   },
 });
-
-module.exports = News;

@@ -1,7 +1,6 @@
 'use strict';
 
-var React = require('react-native');
-var {
+import React, {
   StyleSheet, // 样式
   Text, // 文本
   View, // 类似于DIV
@@ -9,9 +8,9 @@ var {
   ScrollView,
   TouchableOpacity,
   AsyncStorage,
-} = React;
+} from 'react-native';
 
-class StarList extends React.Component {
+export default class StarList extends React.Component {
 
     constructor(props) {
       super(props);
@@ -67,5 +66,3 @@ var styles = StyleSheet.create({
     },
 
 });
-
-module.exports = StarList;

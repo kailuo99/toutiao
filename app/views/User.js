@@ -1,20 +1,18 @@
 'use strict';
 
-var React = require('react-native');
-var Dimensions = require('Dimensions');
-var StarList = require('./StarList');
-var Detail = require('./Detail');
-var {
+import React, {
   StyleSheet, // 样式
   Text, // 文本
   View, // 类似于DIV
-  PixelRatio,
   Navigator,
   ScrollView,
   PixelRatio,
   TouchableOpacity,
-} = React;
+} from 'react-native';
 
+import StarList from './StarList';
+import Detail from './Detail';
+import Dimensions from 'Dimensions';
 
 var Nav = {
 
@@ -35,9 +33,13 @@ var Nav = {
   },
 };
 
-var User = React.createClass({
+export default class User extends React.Component{
+    constructor(props) {
+      super(props);
+      this._renderScene = this._renderScene.bind(this);
+    }
 
-    _renderScene: function(route,nav) {
+    _renderScene(route,nav) {
         switch (route.idx) {
             // case 'user':
             //     return (
@@ -71,17 +73,17 @@ var User = React.createClass({
             default:
         }
 
-    },
+    }
     // 判断是否需要导航条
-    _navigationbar: function() {
+    _navigationbar() {
         return (
             <Navigator.NavigationBar
               routeMapper={Nav}
               style={styles.navBar}
             />
         );
-    },
-    render: function() {
+    }
+    render() {
         return (
             <Navigator
               style={{flex:1}}
@@ -97,7 +99,7 @@ var User = React.createClass({
             />
         );
     }
-});
+};
 
 var styles = StyleSheet.create({
 
@@ -140,5 +142,3 @@ var styles = StyleSheet.create({
     },
 
 });
-
-module.exports = User;
