@@ -152,6 +152,7 @@ var styles = StyleSheet.create({
   navBarTitleText: {
     fontWeight: '500',
     letterSpacing: 0.8,
+    textAlign: 'center',
   },
   navBarLeftButton: {
     paddingLeft: 10,

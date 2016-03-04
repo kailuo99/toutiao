@@ -95,7 +95,7 @@ export default class Main extends React.Component {
                   style={styles.navBar}
                 />;
     } else {
-        return <Text style={{height:0}} />;
+        return <Text style={{height:0,position:'absolute',top:0}} />;
     }
   }
 

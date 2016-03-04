@@ -13,8 +13,10 @@ import React, {
   Alert,
   RefreshControl,
   AppState,
+  ActivityIndicatorIOS,
   Platform
 } from 'react-native';
+import ProgressBar from 'ProgressBarAndroid';
 
 import Li from './Li';
 
@@ -38,9 +40,9 @@ export default class List extends React.Component{
       this._reloadLists = this._reloadLists.bind(this);
   }
   componentDidMount() {
-      // if(!this.state.loaded) {
-      //     this._loadinitData();
-      // }
+      if(!this.state.loaded) {
+          this._loadinitData();
+      }
 
   }
   componentWillUnmount() {
@@ -155,11 +157,19 @@ export default class List extends React.Component{
   }
 
   renderFooter() {
-    return (
+    if(Platform.OS === 'ios') {
+        return (
+          <View style={{flex:1, height:40,alignItems:'center',justifyContent:'center'}}>
+            <ActivityIndicatorIOS color = {'#d43d3d'} />
+          </View>
+        );
+    } else {
+      return (
         <View style={{flex:1, height:40,alignItems:'center',justifyContent:'center'}}>
-          <ActivityIndicatorIOS color = {'#d43d3d'} />
+          <ProgressBar color = {'#d43d3d'} />
         </View>
-    );
+      );
+    }
   }
   // 数据加载到底部时候拉取新数据
   onEndReached() {
@@ -174,22 +184,23 @@ export default class List extends React.Component{
   render() {
       if(!this.state.loaded) {
         if(Platform.OS === 'ios') {
-            return (
-              <View style={{flex:1}}>
-                <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
-                  <React.ActivityIndicatorIOS color = {'#d43d3d'} />
-                </View>
-              </View>
-          );
-        } else { // android
           return (
-              <View style={{flex:1}}>
-                <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
-                  <React.progressBar color = {'#d43d3d'} />
-                </View>
+            <View style={{flex:1}}>
+              <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
+                <ActivityIndicatorIOS color = {'#d43d3d'} />
               </View>
+            </View>
+          );
+        } else {
+          return (
+            <View style={{flex:1}}>
+              <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
+                <ProgressBar color = {'#d43d3d'} />
+              </View>
+            </View>
           );
         }
+        
       } else {
         return (
           <View style={{flex: 1,marginTop:64,}} >
