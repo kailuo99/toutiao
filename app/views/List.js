@@ -182,7 +182,7 @@ export default class List extends React.Component{
         this.setState({
             isFetchMaxId:this.state.datas.max,
         });
-        this.getData('bottom', 21);
+        this.getData('bottom', 20);
     }
   }
   render() {
@@ -207,10 +207,10 @@ export default class List extends React.Component{
         
       } else {
         return (
-          <View style={{flex: 1, marginTop: (Platform.OS === 'ios')? 65: 55,}} >
+          <View style={{flex: 1, marginTop: (Platform.OS === 'ios')? 64: 50,}} >
             <ListView style={{flex:1,overflow: 'hidden',marginBottom: (Platform.OS === 'ios')? 50: 0,}}
               initialListSize={20}
-              pageSize={1}
+              pageSize={10}
               scrollRenderAheadDistance={50}
               removeClippedSubviews={true}
               dataSource={ds.cloneWithRowsAndSections(this.state.datas.lists)} // 渲染的数据聚合

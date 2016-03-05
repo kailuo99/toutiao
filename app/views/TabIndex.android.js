@@ -4,7 +4,9 @@ import React, {
   StyleSheet, // 样式
   PixelRatio,
   View,
-  Text
+  TouchableOpacity,
+  Text,
+  Navigator
 } from 'react-native';
 
 import News from './News';
@@ -26,7 +28,6 @@ var TabArr = [
     },
 ];
 
-
 export default class TabIndex extends React.Component{
 
     constructor(props) {
@@ -38,27 +39,48 @@ export default class TabIndex extends React.Component{
 
     _renderScene() {
         switch(this.state.tabIndex) {
-            case 0:
-                return <News pnav={this.props.pnav} starDatas={this.props.starDatas} />;
-                break;
-            case 1:
-                return <User pnav={this.props.pnav} starDatas={this.props.starDatas} />;
-                break;
+          case 0:
+            return <News pnav={this.props.pnav} starDatas={this.props.starDatas} />;
+            break;
+          case 1:
+            return <User pnav={this.props.pnav} starDatas={this.props.starDatas} />;
+            break;
         }
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <News pnav={this.props.pnav} starDatas={this.props.starDatas} />
-                <View style={styles.tabbar}>
-                  <View style={styles.tabitem}>
-                    <Text style={styles.tabtext}>首页</Text>
-                  </View>
-                  <View style={styles.tabitem}>
-                    <Text style={styles.tabtext}>收藏</Text>
-                  </View>
-                </View>
+              {this._renderScene()}
+              <View style={styles.tabbar}>
+                {
+                  TabArr.map((tabItem)=>{
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={1}
+                        style={styles.tabitem} 
+                        key={tabItem.key} 
+                        onPress={()=>{
+                          if(this.state.tabIndex !== tabItem.key) {
+                            this.setState({
+                              tabIndex: tabItem.key,
+                            });
+                          }
+                        }}
+                      >
+                        <View>
+                          <Icon 
+                            name={(this.state.tabIndex === tabItem.key)? tabItem.selectedIcon: tabItem.icon} 
+                            style={{marginTop:4, color: (this.state.tabIndex === tabItem.key)? '#5c73f9ff': '#666'}} 
+                            size={30} 
+                          />
+                          <Text style={styles.tabtext}>{tabItem.title}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })
+                }
+              </View>
             </View>
         );
     }
@@ -80,11 +102,11 @@ var styles = StyleSheet.create({
     tabitem: {
       flex: 1,
       height: 55,
+      alignItems: 'center',
     },
     tabtext: {
-      height: 55,
       textAlign: 'center',
-      lineHeight: 55
+      fontSize: 12,
     }
 
 });

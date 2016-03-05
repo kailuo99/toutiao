@@ -5,7 +5,8 @@ import React, {
   AsyncStorage,
   StyleSheet,
   TouchableOpacity,
-  Text
+  Text,
+  Platform
 } from 'react-native';
 
 import TabIndex from './views/TabIndex';
@@ -185,7 +186,8 @@ var styles = StyleSheet.create({
   navBar: {
       backgroundColor:'#fff',
       borderColor:'#dddddd',
-      borderWidth:1
+      borderWidth:1,
+      height: (Platform.OS === 'ios')? 64: 50
   },
   navBarTitleText: {
     fontWeight: '500',

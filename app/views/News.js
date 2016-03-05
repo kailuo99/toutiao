@@ -7,6 +7,7 @@ import React, {
   Navigator,
   TouchableOpacity,
   AsyncStorage,
+  Platform
 } from 'react-native';
 
 import List from './List';
@@ -138,6 +139,7 @@ var styles = StyleSheet.create({
       backgroundColor:'#fff',
       borderColor:'#dddddd',
       borderWidth:1,
+      height: (Platform.OS === 'ios')? 64: 50
   },
   navBarButtonText: {
       color:'#666',
@@ -147,16 +149,17 @@ var styles = StyleSheet.create({
   navBarText: {
     color:'#333',
     fontSize: 20,
-    marginVertical: 12,
+    marginVertical: 13,
   },
   navBarTitleText: {
-    fontWeight: '500',
+    fontWeight: (Platform.OS === 'ios')? '500': '400',
     letterSpacing: 0.8,
+    marginVertical: (Platform.OS === 'ios')? 12: 18,
   },
   navBarLeftButton: {
-    paddingLeft: 10,
+    paddingLeft: 5,
   },
   navBarRightButton: {
-    paddingRight: 10,
+    paddingRight: 5,
   },
 });
