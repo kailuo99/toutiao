@@ -7,7 +7,8 @@ import React, {
   WebView,
   TouchableOpacity,
   PixelRatio,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 
 export default class Detail extends React.Component{
@@ -42,7 +43,7 @@ var styles = StyleSheet.create({
     justifyContent:'center',
   },
   content: {
-    marginTop:60,
+    marginTop: (Platform.OS === 'ios')? 65: 55,
     backgroundColor:'#fff',
     width: Dimensions.get('window').width,
     flex:1,

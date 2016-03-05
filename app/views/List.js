@@ -51,6 +51,7 @@ export default class List extends React.Component{
 
   // 异步加载数据
   async _loadinitData() {
+      
       var tmp = await AsyncStorage.getItem(LISTS_KEY + this.props.route.sign);
       if(tmp != null) {
           tmp =  JSON.parse(tmp);
@@ -68,20 +69,23 @@ export default class List extends React.Component{
             loaded: true,
           });
           if(this.props.route.sign == 'index') {
-            await this.getData('top');
+            await this.getData('top', 6);
           }
       } else {
-          await this.getData('init');
+          await this.getData('init',30);
       }
   }
   // 获取数据
-  async getData(pos) {
+  async getData(pos, count) {
       if(!this.state.datas) {
         var begin_id = 0;
       } else {
         var begin_id = this.state.datas.max;
       }
-      var url = PRE_LIST_URL + this.props.route.sign + '?beginid=' + begin_id;
+      if(!count) {
+        count = 6;
+      }
+      var url = PRE_LIST_URL + this.props.route.sign + '/'+count+'?beginid=' + begin_id;
       console.log(url);
       fetch(url)
         .then((response) => response.json())
@@ -151,7 +155,7 @@ export default class List extends React.Component{
   _reloadLists() {
       this.setState({isRefreshing: true});
       setTimeout(() => {
-        this.getData('top');
+        this.getData('top', 6);
         this.setState({isRefreshing: false});
       }, 1000);
   }
@@ -159,14 +163,14 @@ export default class List extends React.Component{
   renderFooter() {
     if(Platform.OS === 'ios') {
         return (
-          <View style={{flex:1, height:40,alignItems:'center',justifyContent:'center'}}>
+          <View style={{height:40,alignItems:'center',justifyContent:'center'}}>
             <ActivityIndicatorIOS color = {'#d43d3d'} />
           </View>
         );
     } else {
       return (
-        <View style={{flex:1, height:40,alignItems:'center',justifyContent:'center'}}>
-          <ProgressBar color = {'#d43d3d'} />
+        <View style={{height:40,alignItems:'center',justifyContent:'center'}}>
+          <ProgressBar color = {'#d47b83'} styleAttr="Small" />
         </View>
       );
     }
@@ -178,7 +182,7 @@ export default class List extends React.Component{
         this.setState({
             isFetchMaxId:this.state.datas.max,
         });
-        this.getData('bottom');
+        this.getData('bottom', 21);
     }
   }
   render() {
@@ -195,7 +199,7 @@ export default class List extends React.Component{
           return (
             <View style={{flex:1}}>
               <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
-                <ProgressBar color = {'#d43d3d'} />
+                <ProgressBar color = {'#d47b83'} />
               </View>
             </View>
           );
@@ -203,22 +207,23 @@ export default class List extends React.Component{
         
       } else {
         return (
-          <View style={{flex: 1,marginTop:64,}} >
-            <ListView style={{flex:1,overflow: 'hidden',marginBottom:50}}
-              initialListSize={6}
+          <View style={{flex: 1, marginTop: (Platform.OS === 'ios')? 65: 55,}} >
+            <ListView style={{flex:1,overflow: 'hidden',marginBottom: (Platform.OS === 'ios')? 50: 0,}}
+              initialListSize={20}
               pageSize={1}
-              scrollRenderAheadDistance={100}
+              scrollRenderAheadDistance={50}
               removeClippedSubviews={true}
               dataSource={ds.cloneWithRowsAndSections(this.state.datas.lists)} // 渲染的数据聚合
               renderRow={this._renderList}  // 单一条数模板
               minPulldownDistance={30}   // 最新下拉长度
               renderFooter={this.renderFooter}
               onEndReached={this.onEndReached}
+              onEndReachedThreshold={100}
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.isRefreshing}
                   onRefresh={this._reloadLists}
-                  tintColor="#fff"
+                  tintColor=  "#fff"
                   title="正在拉取数据..."
                 />
               }

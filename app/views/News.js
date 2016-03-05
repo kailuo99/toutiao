@@ -115,7 +115,7 @@ export default class News extends React.Component{
                   return <List navigator={nav} route={route} pnav={this.props.pnav} starDatas={this.props.starDatas}/>;
               }
           }
-          sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的北京颜色
+          sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的背景颜色
           configureScene={() => ({
             ...Navigator.SceneConfigs.HorizontalSwipeJump,
           })}
@@ -137,7 +137,7 @@ var styles = StyleSheet.create({
   navBar: {
       backgroundColor:'#fff',
       borderColor:'#dddddd',
-      borderWidth:1
+      borderWidth:1,
   },
   navBarButtonText: {
       color:'#666',
@@ -152,17 +152,11 @@ var styles = StyleSheet.create({
   navBarTitleText: {
     fontWeight: '500',
     letterSpacing: 0.8,
-    textAlign: 'center',
   },
   navBarLeftButton: {
     paddingLeft: 10,
   },
   navBarRightButton: {
     paddingRight: 10,
-  },
-  scene: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#EAEAEA',
   },
 });
