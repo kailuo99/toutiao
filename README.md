@@ -8,6 +8,13 @@
 3. 上拉加载更多
 4. 收藏功能
 
+# 目标
+
+1. 版本1.0[基本完成！]  
+    功能简单，基本可用，尽量少使用第三方组件。
+2. 版本2.0[将要开发...]  
+    扩展功能，添加动画。之前的基础上优化性能，减少内存消耗。
+
 # 使用的组件
 
 1. 图标： [oblador/react-native-vector-icons](https://github.com/oblador/react-native-vector-icons)
