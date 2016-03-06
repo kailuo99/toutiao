@@ -1,5 +1,5 @@
 # react-native-toutiao
-一款使用react native 开发的ios版的资讯头条APP。
+一款使用react native 开发的ios、android版的资讯头条APP。
 
 # 实现的功能有：
 
@@ -13,7 +13,7 @@
 1. 图标： [oblador/react-native-vector-icons](https://github.com/oblador/react-native-vector-icons)
 2. 获取设备信息：[rebeccahughes/react-native-device-info](https://github.com/rebeccahughes/react-native-device-info)
 
-# 使用方式
+# 使用方式IOS
 
     需要对react-native有所了解，不会配置环境请查看官方文档。
 
@@ -36,6 +36,12 @@ Note:
 4. XCODe下执行：菜单->product->scheme->edit scheme->run->build config 设置为 release，debug executable 去掉。
 
 第一步是为了将js bundle包进行压缩。2、3步是为了去掉 shake your phone 模式。
+
+#使用方式ANDROID
+
+暂无
+
+
 
 # 截图
 
