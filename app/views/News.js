@@ -104,6 +104,22 @@ var Nav = {
 };
 
 export default class News extends React.Component{
+  constructor(props) {
+      super(props);
+      this.state = {
+        currentRoute: ROUTE_STACK[0],
+      }
+      this._willFocus = this._willFocus.bind(this);
+  }
+  // 监听的回调
+  _willFocus(route) {
+    
+     // if(route.sign !== ROUTE_STACK[0].sign) {
+     //  this.setState({
+     //    currentRoute: route
+     //  });
+     // }
+  }
 
   render() {
     return (
@@ -113,7 +129,7 @@ export default class News extends React.Component{
           initialRouteStack={ROUTE_STACK}
           renderScene={
               (route,nav)=>{
-                  return <List navigator={nav} route={route} pnav={this.props.pnav} starDatas={this.props.starDatas}/>;
+                  return <List navigator={nav} scanRoute={this.state.currentRoute} route={route} pnav={this.props.pnav} starDatas={this.props.starDatas}/>;
               }
           }
           sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的背景颜色
@@ -126,6 +142,7 @@ export default class News extends React.Component{
               style={styles.navBar}
             />
           }
+          onWillFocus={this._willFocus}
         />
     );
   }

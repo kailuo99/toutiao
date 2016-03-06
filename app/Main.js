@@ -30,12 +30,13 @@ export default class Main extends React.Component {
       this.RightButton = this.RightButton.bind(this);
   }
   componentDidMount() {
-      // 异步获取
-      this._initGetData();
+      if(!this.state.hideNavBar && !this.state.starDatas) {
+        this._initGetData();
+      }
       var x = new Statistic();
       x.Run();
   }
-  // 初始化执行
+  // 初始化执行-可以优化：1.不进行组建的刷新；2.不在这里获取收藏数据
   async _initGetData() {
       // 获取收藏数据
       var tmps = await AsyncStorage.getItem(STAR_KEY);
@@ -58,7 +59,6 @@ export default class Main extends React.Component {
   }
 
   _renderScene(route,nav) {
-    console.log(route);
       switch (route.sence) {
           case 'tab':
               return <TabIndex pnav={nav} starDatas={this.state.starDatas}/>

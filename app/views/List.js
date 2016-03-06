@@ -29,7 +29,6 @@ export default class List extends React.Component{
   constructor(props) {
       super(props);
       this.state = {
-         sign: null,
           datas:null,
           loaded:false,
           isFetchMaxId:0, //正在拉取的当前的数据的最大ID
@@ -44,9 +43,6 @@ export default class List extends React.Component{
           this._loadinitData();
       }
 
-  }
-  componentWillUnmount() {
-    AppState.removeEventListener('change');
   }
 
   // 异步加载数据
@@ -68,9 +64,9 @@ export default class List extends React.Component{
             datas: tmp,
             loaded: true,
           });
-          if(this.props.route.sign == 'index') {
-            await this.getData('top', 6);
-          }
+          // if(this.props.route.sign == 'index') {
+          //   await this.getData('top', 6);
+          // }
       } else {
           await this.getData('init',30);
       }

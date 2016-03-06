@@ -12,8 +12,13 @@ import React, {
 } from 'react-native';
 
 export default class Detail extends React.Component{
+
+  constructor(props) {
+    super(props);
+  }
   render() {
-    return (
+    if(this.props.id) {
+      return (
         <View style={{flex:1}}>
             <View style={styles.content}>
               <WebView
@@ -32,7 +37,9 @@ export default class Detail extends React.Component{
               />
             </View>
         </View>
-    );
+      );
+    }
+    return null;
   }
 };
 
