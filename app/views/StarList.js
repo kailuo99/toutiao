@@ -58,12 +58,14 @@ var styles = StyleSheet.create({
         backgroundColor:'#fff',
         marginBottom: 1,
         justifyContent:'center',
+
     },
     fonts: {
         fontSize:18,
         letterSpacing:0.5,
         marginLeft: 15,
         lineHeight: 25,
+        color: '#333'
     },
 
 });
