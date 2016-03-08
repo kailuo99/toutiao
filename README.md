@@ -46,8 +46,8 @@ Note:
 
 #使用方式ANDROID
 
-暂无
-
+1. 安装说明请看[官方文档](http://facebook.github.io/react-native/docs/android-setup.html#content)。
+2. 离线安装：./toutiao.apk，下载安装即可。
 
 
 # 截图
