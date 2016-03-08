@@ -30,9 +30,7 @@ export default class Main extends React.Component {
       this.RightButton = this.RightButton.bind(this);
   }
   componentDidMount() {
-      if(!this.state.hideNavBar && !this.state.starDatas) {
-        this._initGetData();
-      }
+      this._initGetData();
       var x = new Statistic();
       x.Run();
   }

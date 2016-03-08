@@ -8,6 +8,7 @@ import React, {
   ScrollView,
   TouchableOpacity,
   AsyncStorage,
+  Platform
 } from 'react-native';
 
 export default class StarList extends React.Component {
@@ -50,7 +51,7 @@ export default class StarList extends React.Component {
 var styles = StyleSheet.create({
 
     lists: {
-        marginTop:60,
+        marginTop:(Platform.OS === 'ios')? 0: 20,
     },
     li: {
         height: 75,

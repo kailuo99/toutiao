@@ -4,69 +4,28 @@ import React, {
   StyleSheet, // 样式
   Text, // 文本
   View, // 类似于DIV
-  Navigator,
-  ScrollView,
   PixelRatio,
-  TouchableOpacity,
   Platform
 } from 'react-native';
 
 import StarList from './StarList';
-import Detail from './Detail';
-import Dimensions from 'Dimensions';
-
-var Nav = {
-
-  LeftButton: function(route, navigator, index, navState) {
-    return null;
-  },
-
-  RightButton: function(route, navigator, index, navState) {
-    return null;
-  },
-
-  Title: function(route, navigator, index, navState) {
-    return (
-      <Text style={[styles.navBarText, styles.navBarTitleText]}>
-        {route.name}
-      </Text>
-    );
-  },
-};
 
 export default class User extends React.Component{
     constructor(props) {
       super(props);
-      this._renderScene = this._renderScene.bind(this);
-    }
-
-    _renderScene(route,nav) {
-        switch (route.idx) {
-            case 'starList':
-                return (
-                    <StarList navigator={nav} pnav={this.props.pnav} starDatas={this.props.starDatas}/>
-                );
-                break;
-            default:
-        }
-
     }
 
     render() {
-        return (
-            <Navigator
-              style={{flex:1}}
-              initialRoute={{idx:'starList',name:'我的收藏'}}
-              renderScene={this._renderScene}
-              sceneStyle={{backgroundColor:'#eeeeee'}} // 场景的北京颜色
-              navigationBar={
-                <Navigator.NavigationBar
-                  routeMapper={Nav}
-                  style={styles.navBar}
-                />
-              }
-            />
-        );
+      return (
+          <View style={{flex:1,flexDirection:'column',backgroundColor:'#eee'}}>
+            <View style={styles.navBar}>
+              <Text style={[styles.navBarText, styles.navBarTitleText]}>我的收藏</Text>
+            </View>
+            <View style={{flex:1}}>
+              <StarList pnav={this.props.pnav} starDatas={this.props.starDatas}/>
+            </View>
+          </View>
+      );
     }
 };
 
@@ -81,9 +40,10 @@ var styles = StyleSheet.create({
     navBarText: {
       color:'#333',
       fontSize: 20,
-      marginVertical: (Platform.OS === 'ios')? 12: 18,
+      marginTop: (Platform.OS === 'ios')? 32: 13,
     },
     navBarTitleText: {
+      textAlign:'center',
       fontWeight: '400',
       letterSpacing:0.8,
     },

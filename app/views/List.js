@@ -42,7 +42,6 @@ export default class List extends React.Component{
       if(!this.state.loaded) {
           this._loadinitData();
       }
-
   }
 
   // 异步加载数据
