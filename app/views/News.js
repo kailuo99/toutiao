@@ -67,7 +67,11 @@ var Nav = {
         var previousRoute = navState.routeStack[index - 1];
         return (
           <TouchableOpacity
-            onPress={() => navigator.jumpBack()}
+            onPress={() => {
+              if(navigator.state.presentedIndex > 0) {
+                navigator.jumpBack();
+              }
+            }}
             style={styles.navBarLeftButton}>
             <Text style={[styles.navBarText, styles.navBarButtonText]}>
               {previousRoute.name}
@@ -83,7 +87,11 @@ var Nav = {
         var nextRoute = ROUTE_STACK[index + 1];
         return (
           <TouchableOpacity
-            onPress={() => navigator.jumpForward()}
+            onPress={() => {
+              if(navigator.state.presentedIndex < ROUTE_STACK.length-1) {
+                navigator.jumpForward();
+              }
+            }}
             style={styles.navBarRightButton}>
             <Text style={[styles.navBarText, styles.navBarButtonText]}>
               {nextRoute.name}
@@ -91,7 +99,6 @@ var Nav = {
           </TouchableOpacity>
         );
     }
-
   },
 
   Title: function(route, navigator, index, navState) {
@@ -113,7 +120,7 @@ export default class News extends React.Component{
   }
   // 监听的回调
   _willFocus(route) {
-    
+
      // if(route.sign !== ROUTE_STACK[0].sign) {
      //  this.setState({
      //    currentRoute: route
