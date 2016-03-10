@@ -31,9 +31,6 @@ var TabArr = [
 class TabBar extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {
-        index: this.props.navState.presentedIndex
-      };
     }
     render() {
       return (
@@ -44,25 +41,22 @@ class TabBar extends React.Component {
             return (
               <TouchableOpacity
                 activeOpacity={1}
-                style={styles.tabitem} 
-                key={tabItem.key} 
+                style={styles.tabitem}
+                key={tabItem.key}
                 onPress={()=>{
-                  if(this.state.index !== tabItem.key) {
+                  if(this.props.tabIndex !== tabItem.key) {
                     if(tabItem.key === 0) {
                       this.props.navigator.pop();
                     } else {
                       this.props.navigator.push(TabArr[1]);
                     }
-                    this.setState({
-                      index: tabItem.key,
-                    });
                   }
                 }}
               >
                 <View>
-                  <Icon 
-                    name={(this.state.index === tabItem.key)? tabItem.selectedIcon: tabItem.icon} 
-                    style={{marginTop:4, color: (this.state.index === tabItem.key)? '#5c73f9ff': '#666'}} 
+                  <Icon
+                    name={(this.props.tabIndex === tabItem.key)? tabItem.selectedIcon: tabItem.icon}
+                    style={{marginTop:1, color: (this.props.tabIndex === tabItem.key)? '#5c73f9ff': '#666'}}
                     size={30}
                   />
                   <Text style={styles.tabtext}>{tabItem.title}</Text>
@@ -81,8 +75,12 @@ export default class TabIndex extends React.Component{
     constructor(props) {
       super(props);
       this._renderScene = this._renderScene.bind(this);
+      this._onWillFocus = this._onWillFocus.bind(this);
+      this.state = {
+        tabIndex:0
+      };
     }
-    
+
     _renderScene(route, nav) {
         switch(route.key) {
           case 0:
@@ -92,6 +90,12 @@ export default class TabIndex extends React.Component{
             return <User pnav={this.props.pnav} starDatas={this.props.starDatas} />;
             break;
         }
+    }
+
+    _onWillFocus(route) {
+      this.setState({
+        tabIndex: route.key
+      });
     }
 
     render() {
@@ -104,12 +108,13 @@ export default class TabIndex extends React.Component{
               renderScene={this._renderScene}
               sceneStyle={{backgroundColor:'#fff'}}
               navigationBar={
-                <TabBar 
+                <TabBar
                   navigator={this.props.navigator}
                   navState={this.props.navState}
+                  tabIndex={this.state.tabIndex}
                 />
               }
-
+              onWillFocus={this._onWillFocus}
             />
         );
     }
@@ -123,7 +128,7 @@ var styles = StyleSheet.create({
       backgroundColor: '#fff',
       borderTopColor:'#dddddd',
       borderTopWidth: 1,
-      height: 55,
+      height: 50,
       flexDirection:'row',
       position: 'relative',
       bottom:0,
@@ -132,12 +137,13 @@ var styles = StyleSheet.create({
     },
     tabitem: {
       flex: 1,
-      height: 55,
+      height: 50,
       alignItems: 'center',
     },
     tabtext: {
       textAlign: 'center',
       fontSize: 12,
+      marginTop: -2
     }
 
 });

@@ -50,7 +50,7 @@ var styles = StyleSheet.create({
     justifyContent:'center',
   },
   content: {
-    marginTop: (Platform.OS === 'ios')? 64: 50,
+    marginTop: (Platform.OS === 'ios')? 64: 48,
     backgroundColor:'#fff',
     width: Dimensions.get('window').width,
     flex:1,

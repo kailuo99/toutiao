@@ -46,7 +46,7 @@ export default class List extends React.Component{
 
   // 异步加载数据
   async _loadinitData() {
-      
+
       var tmp = await AsyncStorage.getItem(LISTS_KEY + this.props.route.sign);
       if(tmp != null) {
           tmp =  JSON.parse(tmp);
@@ -116,10 +116,10 @@ export default class List extends React.Component{
          )
         .done();
   }
-  
+
   _renderList(data,sectionID,rowID) {
       return (
-        <TouchableOpacity activeOpacity={0.5} key={data.resource.id} onPress={()=>this.navHandleChange(data.resource)}>
+        <TouchableOpacity activeOpacity={0.4} key={data.resource.id} onPress={()=>this.navHandleChange(data.resource)}>
           <Li data={data.resource} />
         </TouchableOpacity>
       );
@@ -199,10 +199,10 @@ export default class List extends React.Component{
             </View>
           );
         }
-        
+
       } else {
         return (
-          <View style={{flex: 1, marginTop: (Platform.OS === 'ios')? 64: 50,}} >
+          <View style={{flex: 1, marginTop: (Platform.OS === 'ios')? 64: 48,}} >
             <ListView style={{flex:1,overflow: 'hidden',marginBottom: (Platform.OS === 'ios')? 50: 0,}}
               initialListSize={20}
               pageSize={10}

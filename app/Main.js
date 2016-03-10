@@ -185,7 +185,7 @@ var styles = StyleSheet.create({
       backgroundColor:'#fff',
       borderColor:'#dddddd',
       borderWidth:1,
-      height: (Platform.OS === 'ios')? 64: 50
+      height: (Platform.OS === 'ios')? 64: 48
   },
   navBarTitleText: {
     fontWeight: '500',
@@ -199,7 +199,7 @@ var styles = StyleSheet.create({
   icon: {
       width:30,
       height:30,
-      marginTop:6,
+      marginTop:(Platform.OS === 'ios')? 6: 9,
       textAlign:'center'
   }
 });

@@ -163,22 +163,22 @@ var styles = StyleSheet.create({
       backgroundColor:'#fff',
       borderColor:'#dddddd',
       borderWidth:1,
-      height: (Platform.OS === 'ios')? 64: 50
+      height: (Platform.OS === 'ios')? 64: 48
   },
   navBarButtonText: {
-      color:'#666',
-      fontSize:18,
+      color:'#888',
+      fontSize: (Platform.OS === 'ios')? 18: 17,
       letterSpacing: 1,
   },
   navBarText: {
-    color:'#333',
-    fontSize: 20,
-    marginVertical: 13,
+    fontSize: (Platform.OS === 'ios')? 20: 19,
+    marginVertical: (Platform.OS === 'ios')? 13: 12,
   },
   navBarTitleText: {
-    fontWeight: (Platform.OS === 'ios')? '500': '400',
+    fontWeight: (Platform.OS === 'ios')? '500': '300',
     letterSpacing: 0.8,
-    marginVertical: (Platform.OS === 'ios')? 12: 18,
+    marginTop: (Platform.OS === 'ios')? 12: 20,
+    color: (Platform.OS === 'ios')? '#333': '#666',
   },
   navBarLeftButton: {
     paddingLeft: 5,

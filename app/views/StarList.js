@@ -6,9 +6,10 @@ import React, {
   View, // 类似于DIV
   Component,
   ScrollView,
-  TouchableOpacity,
+  TouchableHighlight,
   AsyncStorage,
-  Platform
+  Platform,
+  PixelRatio
 } from 'react-native';
 
 export default class StarList extends React.Component {
@@ -31,16 +32,17 @@ export default class StarList extends React.Component {
                         {
                             this.props.starDatas.map((data)=>{
                                 return (
-                                    <TouchableOpacity key={data.id} onPress={()=>{
+                                    <TouchableHighlight activeOpacity={0.7} underlayColor="#ccc" key={data.id} onPress={()=>{
                                         this.props.pnav.push({sence:'detail', id:data.id, title:data.title,isStar:true});
                                     }}>
                                         <View style={styles.li}>
                                             <Text style={styles.fonts}>{data.title}</Text>
                                         </View>
-                                    </TouchableOpacity>
+                                    </TouchableHighlight>
                                 );
                             })
                         }
+                        <View style={{height:20}}/>
                     </ScrollView>
                 </View>
             );
@@ -51,21 +53,22 @@ export default class StarList extends React.Component {
 var styles = StyleSheet.create({
 
     lists: {
-        marginTop:(Platform.OS === 'ios')? 0: 20,
+        marginTop: 0,
     },
     li: {
         height: 75,
         backgroundColor:'#fff',
-        marginBottom: 1,
         justifyContent:'center',
-
+        borderColor:'#dadbd8',
+        borderBottomWidth:1/PixelRatio.get(),
+        paddingLeft: 10,
     },
     fonts: {
-        fontSize:18,
+        fontSize:(Platform.OS === 'ios')? 18: 17,
         letterSpacing:0.5,
-        marginLeft: 15,
         lineHeight: 25,
-        color: '#333'
+        marginRight: 10,
+        color: (Platform.OS === 'ios')? '#333': '#555',
     },
 
 });

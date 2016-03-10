@@ -6,6 +6,7 @@ import React, {
   View, // 类似于DIV
   Image,
   PixelRatio,
+  Platform
 } from 'react-native';
 
 import Dimensions from 'Dimensions';
@@ -71,16 +72,16 @@ var styles = StyleSheet.create({
         paddingLeft:5,
         paddingRight:5,
         backgroundColor:'#fff',
-        marginBottom:1,
+        marginBottom: 1,
   },
   listTitle: {
       marginTop:-4,
       lineHeight:23,
-      fontWeight:'400',
+      fontWeight: '400',
       marginBottom:4,
-      letterSpacing:0.8,
-      fontSize:19,
-      color:'#333',
+      letterSpacing: 0.8,
+      fontSize:('ios' == Platform.OS)? 19: 17,
+      color:('ios' == Platform.OS)? '#333': '#555',
   },
   listImg: {
       marginLeft:2,
