@@ -20,6 +20,13 @@
 1. 图标： [oblador/react-native-vector-icons](https://github.com/oblador/react-native-vector-icons)
 2. 获取设备信息：[rebeccahughes/react-native-device-info](https://github.com/rebeccahughes/react-native-device-info)
 
+# 大家运行遇到的问题，这里统一答复
+
+1. 缺少头文件 RCTBoderStyle.h
+
+方法：这个问题是因为 node_modules/react-native/React/Views/目录下没有RCTBorderStyle.h文件造成的。node_modules下面的东西都是通过npm安装的。删除node_modules目录，重新执行npm install 应该就能解决了。
+
+
 # 使用方式IOS
 
     需要对react-native有所了解，不会配置环境请查看官方文档。
@@ -54,13 +61,12 @@ Note:
 
 ![列表页](http://7xpkii.com1.z0.glb.clouddn.com/demo1.png)  
 列表页  
-  
+
 ![详情页](http://7xpkii.com1.z0.glb.clouddn.com/demo2.png)  
 详情页    
- 
+
 ![收藏列表](http://7xpkii.com1.z0.glb.clouddn.com/demo3.png)  
 收藏列表  
 
 ![列表页](http://7xpkii.com1.z0.glb.clouddn.com/demo4.png)  
-列表页 
-
+列表页

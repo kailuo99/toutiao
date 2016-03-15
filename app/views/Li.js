@@ -88,6 +88,7 @@ var styles = StyleSheet.create({
       marginRight:2,
       width: (Dimensions.get('window').width-22)/3,
       height: (Dimensions.get('window').width-22)*10/43,
+      backgroundColor: '#eeeeee'
   },
   listMute: {
       fontSize:12,
