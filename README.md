@@ -58,15 +58,8 @@ Note:
 
 
 # 截图
+---
+![](http://m.yergoo.com/1.0.jpg)  
 
-![列表页](http://7xpkii.com1.z0.glb.clouddn.com/demo1.png)  
-列表页  
 
-![详情页](http://7xpkii.com1.z0.glb.clouddn.com/demo2.png)  
-详情页    
-
-![收藏列表](http://7xpkii.com1.z0.glb.clouddn.com/demo3.png)  
-收藏列表  
-
-![列表页](http://7xpkii.com1.z0.glb.clouddn.com/demo4.png)  
-列表页
+![](http://m.yergoo.com/1.1.jpg)
