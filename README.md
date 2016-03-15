@@ -59,7 +59,7 @@ Note:
 
 # 截图
 ---
-![](http://m.yergoo.com/1.0.jpg)  
+![](http://m.yergoo.com/2.0.jpg)  
 
 
-![](http://m.yergoo.com/1.1.jpg)
+![](http://m.yergoo.com/2.1.jpg)
